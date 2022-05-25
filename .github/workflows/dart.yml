@@ -1,0 +1,63 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Dart
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - dependabot/*
+      - feature/*
+      - bugfix/*
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
+      - dev
+      - dependabot/*
+      - feature/*
+      - bugfix/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Note: This workflow uses the latest stable version of the Dart SDK.
+      # You can specify other versions if desired, see documentation here:
+      # https://github.com/dart-lang/setup-dart/blob/main/README.md
+      # - uses: dart-lang/setup-dart@v1
+      - name: Set up Dart SDK
+        uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+
+      - name: Install Dependencies
+        run: dart pub get
+
+      - name: Verify Formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze Project
+        run: dart analyze --fatal-infos
+
+      - name: Activate Coverage
+        run: dart pub global activate coverage
+
+      # Your project will need to have tests in test/ and a dependency on
+      # package:test for this step to succeed.
+      - name: Run Tests
+        run: dart pub global run coverage:test_with_coverage --branch-coverage
+
+      - name: Upload Coverage Results
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+          fail_ci_if_error: true
