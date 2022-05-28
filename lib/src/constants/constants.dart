@@ -33,3 +33,5 @@ String? get kJavaHome => kEnvVars['JAVA_HOME'];
 
 Directory? get kJavaHomeDirectory =>
     kJavaHome != null ? Directory(kJajvmHome) : null;
+
+String get kDefaultLinkPath => join(kJajvmHome, 'default');

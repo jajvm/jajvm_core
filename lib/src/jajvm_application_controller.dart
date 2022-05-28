@@ -12,11 +12,16 @@ class Awesome {
 
 final jajvmApplicationControllerProvider = Provider((ref) {
   final FileSystemService fileSystemService = ref.watch(fileSystemProvider);
-  return JajvmApplicationController(fileSystemService: fileSystemService);
+
+  return JajvmApplicationController(
+    fileSystemService: fileSystemService,
+  );
 });
 
 class JajvmApplicationController {
-  JajvmApplicationController({required this.fileSystemService});
+  JajvmApplicationController({
+    this.fileSystemService = const FileSystemService(),
+  });
 
   String get cacheDirectory => kJajvmHome;
   final FileSystemService fileSystemService;
@@ -24,7 +29,7 @@ class JajvmApplicationController {
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version
   /// already installed after copying it to the jajvm `versions` folder.
-  /// 
+  ///
   /// Throws [JajvmException] if it fails to create the folder or symlink
   Future<void> initialize({bool setCurrentJavaHomeAsDefault = false}) async {
     // Create jajvm folder if it does not exist
@@ -36,6 +41,21 @@ class JajvmApplicationController {
     // - Copy the current JAVA_HOME folder to the jajvm `versions` folder
     // - Create symlink at `~/jajvm/default` which points to `~/jajvm/versions/<new-release>`
     // - reinitializeEnvironment()
+    if (!setCurrentJavaHomeAsDefault) return;
+
+    final currentJavaHome = kJavaHomeDirectory;
+    if (currentJavaHome == null) return;
+
+    final JavaRelease javaRelease = await copySystemJavaRelease(
+      path: currentJavaHome.path,
+      alias: 'SystemJavaHome', // TODO: Use better name by parsing path for info
+    );
+    fileSystemService.createSymLink(
+      kDefaultLinkPath,
+      javaRelease.path,
+    );
+
+    await reinitializeEnvironment();
   }
 
   /// Set java release as global default
@@ -51,10 +71,16 @@ class JajvmApplicationController {
   }
 
   /// Copy java release on system to jajvm's version directory
-  Future<void> copyJavaRelease(String releasePath) async {
+  Future<JavaRelease> copySystemJavaRelease({
+    required String path,
+    String? version,
+    String? vender,
+    String? alias,
+  }) async {
     // User inputs required path to java folder
 
     // Verify the folder is a valid java installation
+    // TODO: Figure out how to determine if it is a valid java release
 
     // Try to figure out java version
     // - If fails, user inputs java version
@@ -63,6 +89,13 @@ class JajvmApplicationController {
     // - If fails, user inputs required vender
 
     // User inputs optional nickname, defaults to normalized folder path
+
+    return JavaRelease.fromPath(
+      path: path,
+      version: version,
+      vender: vender,
+      alias: alias,
+    );
   }
 
   /// Search file system for valid java releases
