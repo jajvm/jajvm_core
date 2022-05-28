@@ -25,7 +25,7 @@ class FileSystemService {
       if (dir.existsSync()) return;
 
       dir.createSync(recursive: true);
-    } on FileSystemException catch (e, st) {
+    } on FileSystemException catch (e) {
       throw JajvmException(
         message: 'Could not create folder at "${e.path}": ${e.message}',
         code: kCodeCreateFolderFailed,
