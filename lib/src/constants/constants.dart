@@ -28,3 +28,8 @@ String get kJajvmHome {
 }
 
 String get kJajvmVersionDirectory => join(kJajvmHome, 'versions');
+
+String? get kJavaHome => kEnvVars['JAVA_HOME'];
+
+Directory? get kJavaHomeDirectory =>
+    kJavaHome != null ? Directory(kJajvmHome) : null;

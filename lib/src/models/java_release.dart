@@ -5,35 +5,48 @@ import 'package:equatable/equatable.dart';
 class JavaRelease extends Equatable {
   /// The directory of this release
   final Directory directory;
+  String get path => directory.path;
 
   /// The version number of the Java release
-  final String version;
+  final String? version;
 
   /// The name of the vender given by the user
-  final String vender;
+  final String? vender;
 
   /// The unique nickname given by the user for this
-  final String nickname;
-  
+  final String? alias;
+
+  factory JavaRelease.fromPath({
+    required String path,
+    String? version,
+    String? vender,
+    String? alias,
+  }) =>
+      JavaRelease(
+        directory: Directory(path),
+        version: version,
+        vender: vender,
+        alias: alias,
+      );
+
   const JavaRelease({
     required this.directory,
-    required this.version,
-    required this.vender,
-    required this.nickname,
+    this.version,
+    this.vender,
+    this.alias,
   });
-
 
   JavaRelease copyWith({
     Directory? directory,
     String? version,
     String? vender,
-    String? nickname,
+    String? alias,
   }) {
     return JavaRelease(
       directory: directory ?? this.directory,
       version: version ?? this.version,
       vender: vender ?? this.vender,
-      nickname: nickname ?? this.nickname,
+      alias: alias ?? this.alias,
     );
   }
 
@@ -42,7 +55,7 @@ class JavaRelease extends Equatable {
       'directory': directory.path,
       'version': version,
       'vender': vender,
-      'nickname': nickname,
+      'alias': alias,
     };
   }
 
@@ -51,19 +64,25 @@ class JavaRelease extends Equatable {
       directory: Directory(map['directory']),
       version: map['version'] ?? '',
       vender: map['vender'] ?? '',
-      nickname: map['nickname'] ?? '',
+      alias: map['nickname'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory JavaRelease.fromJson(String source) => JavaRelease.fromMap(json.decode(source));
+  factory JavaRelease.fromJson(String source) =>
+      JavaRelease.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'JavaRelease(directory: $directory, version: $version, vender: $vender, nickname: $nickname)';
+    return 'JavaRelease(directory: $directory, version: $version, vender: $vender, nickname: $alias)';
   }
 
   @override
-  List<Object> get props => [directory, version, vender, nickname];
+  List<Object> get props => [
+        directory,
+        version ?? 'no version',
+        vender ?? 'no vender',
+        alias ?? 'no alias',
+      ];
 }

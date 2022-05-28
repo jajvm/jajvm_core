@@ -11,6 +11,8 @@ final fileSystemProvider = Provider<FileSystemService>((ref) {
 });
 
 class FileSystemService {
+  const FileSystemService();
+  
   void createJajvmFolder() {
     createFolder(kJajvmHome);
   }
