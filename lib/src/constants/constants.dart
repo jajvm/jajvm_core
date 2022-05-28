@@ -4,9 +4,9 @@ import 'package:path/path.dart';
 
 const String kJajvmHomeKey = 'JAJVM_HOME';
 
-// Code from fvm: https://github.com/fluttertools/fvm/blob/main/lib/constants.dart
+// Code adapted from fvm: https://github.com/fluttertools/fvm/blob/main/lib/constants.dart
 
-final kEnvVars = Platform.environment;
+Map<String, String> get kEnvVars => Platform.environment;
 
 /// User Home Path
 String get kUserHome {
