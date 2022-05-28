@@ -5,13 +5,14 @@ import 'package:riverpod/riverpod.dart';
 
 import '../constants/environment_variables.dart';
 
-final appConfigurationProvider = StateProvider((ref) {
+final appConfigurationProvider = StateNotifierProvider<AppConfiguration, AppConfigurationModel>((ref) {
+  // TODO: Read previous cached directory from database. kJajvmHome is different, move files to new directory
   return AppConfiguration(
     AppConfigurationModel(cacheDirectory: kJajvmHome),
   );
 });
 
-class AppConfiguration extends StateNotifier {
+class AppConfiguration extends StateNotifier<AppConfigurationModel> {
   AppConfiguration(super.state);
 }
 

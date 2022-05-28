@@ -7,23 +7,31 @@ class Awesome {
   bool get isAwesome => true;
 }
 
-final jajvmApplicationControllerProvider = StateProvider((ref) {
-  final configuration = ref.read(appConfigurationProvider);
-  
+final jajvmApplicationControllerProvider = Provider((ref) {
+  final configuration = ref.watch(appConfigurationProvider);
+
+  ref.listen(
+    appConfigurationProvider.select((value) => value.cacheDirectory),
+    (prev, next) {
+      print('Cache directory changed: $prev -> $next');
+
+      // TODO: Move jajvm files to new directory
+    },
+  );
+
   return JajvmApplicationController(
     read: ref.read,
     configuration: configuration,
   );
 });
 
-class JajvmApplicationController extends StateNotifier {
+class JajvmApplicationController {
   final Reader read;
-  final AppConfiguration configuration;
+  final AppConfigurationModel configuration;
 
-  JajvmApplicationController({required this.read, required this.configuration})
-      : super(configuration);
+  JajvmApplicationController({required this.read, required this.configuration});
 
-  String get cacheDirectory => configuration.state;
+  String get cacheDirectory => configuration.cacheDirectory;
 
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version
