@@ -102,7 +102,6 @@ class JajvmApplicationController {
 
   /// List Java projects in database
   Future<List<JavaProject>> listProjects() async {
-    // List all projects in database
     return [];
   }
 
