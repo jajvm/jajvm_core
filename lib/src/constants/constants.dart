@@ -26,3 +26,5 @@ String get kJajvmHome {
 
   return join(kUserHome, 'jajvm');
 }
+
+String get kJajvmVersionDirectory => join(kJajvmHome, 'versions');

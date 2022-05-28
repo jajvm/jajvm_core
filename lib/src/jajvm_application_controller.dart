@@ -1,40 +1,24 @@
 import 'package:riverpod/riverpod.dart';
 
-import 'models/app_configuration.dart';
+import 'constants/constants.dart';
 
 /// Checks if you are awesome. Spoiler: you are.
 class Awesome {
   bool get isAwesome => true;
 }
 
-final jajvmApplicationControllerProvider = Provider((ref) {
-  final configuration = ref.watch(appConfigurationProvider);
-
-  ref.listen(
-    appConfigurationProvider.select((value) => value.cacheDirectory),
-    (prev, next) {
-      print('Cache directory changed: $prev -> $next');
-
-      // TODO: Move jajvm files to new directory
-    },
-  );
-
-  return JajvmApplicationController(
-    configuration: configuration,
-  );
-});
+final jajvmApplicationControllerProvider =
+    Provider((ref) => JajvmApplicationController());
 
 class JajvmApplicationController {
-  final AppConfigurationModel configuration;
+  JajvmApplicationController();
 
-  JajvmApplicationController({required this.configuration});
-
-  String get cacheDirectory => configuration.cacheDirectory;
+  String get cacheDirectory => kJajvmHome;
 
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version
   /// already installed after copying it to the jajvm `versions` folder.
-  Future<void> initialize() async {}
+  Future<void> initialize({bool setCurrentJavaHomeAsDefault = false}) async {}
 
   /// Set java release as global default
 
