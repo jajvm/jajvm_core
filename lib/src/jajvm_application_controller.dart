@@ -20,16 +20,14 @@ final jajvmApplicationControllerProvider = Provider((ref) {
   );
 
   return JajvmApplicationController(
-    read: ref.read,
     configuration: configuration,
   );
 });
 
 class JajvmApplicationController {
-  final Reader read;
   final AppConfigurationModel configuration;
 
-  JajvmApplicationController({required this.read, required this.configuration});
+  JajvmApplicationController({required this.configuration});
 
   String get cacheDirectory => configuration.cacheDirectory;
 
