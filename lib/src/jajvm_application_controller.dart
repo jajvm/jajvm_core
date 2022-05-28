@@ -3,25 +3,34 @@ import 'package:riverpod/riverpod.dart';
 import 'constants/constants.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';
+import 'services/file_system_service.dart';
 
 /// Checks if you are awesome. Spoiler: you are.
 class Awesome {
   bool get isAwesome => true;
 }
 
-final jajvmApplicationControllerProvider =
-    Provider((ref) => JajvmApplicationController());
+final jajvmApplicationControllerProvider = Provider((ref) {
+  final FileSystemService fileSystemService = ref.watch(fileSystemProvider);
+  return JajvmApplicationController(fileSystemService: fileSystemService);
+});
 
 class JajvmApplicationController {
-  JajvmApplicationController();
+  JajvmApplicationController({required this.fileSystemService});
 
   String get cacheDirectory => kJajvmHome;
+  final FileSystemService fileSystemService;
 
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version
   /// already installed after copying it to the jajvm `versions` folder.
+  /// 
+  /// Throws [JajvmException] if it fails to create the folder or symlink
   Future<void> initialize({bool setCurrentJavaHomeAsDefault = false}) async {
     // Create jajvm folder if it does not exist
+    fileSystemService
+      ..createJajvmFolder()
+      ..createVersionsFolder();
 
     // If setCurrentJavaHomeAsDefault is true, set the current java release as the default
     // - Copy the current JAVA_HOME folder to the jajvm `versions` folder
