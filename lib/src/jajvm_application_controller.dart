@@ -14,8 +14,10 @@ class Awesome {
   bool get isAwesome => true;
 }
 
-final _jajvmApplicationControllerProvider = Provider<JajvmApplicationController>((ref) {
-  final FileSystemService fileSystemService = ref.watch(FileSystemService.provider);
+final _jajvmApplicationControllerProvider =
+    Provider<JajvmApplicationController>((ref) {
+  final FileSystemService fileSystemService =
+      ref.watch(FileSystemService.provider);
 
   return JajvmApplicationController(
     fileSystemService: fileSystemService,
@@ -31,7 +33,8 @@ class JajvmApplicationController {
   final FileSystemService fileSystemService;
 
   /// Riverpod Provider for the instance of this class
-  static Provider<JajvmApplicationController> provider = _jajvmApplicationControllerProvider;
+  static Provider<JajvmApplicationController> provider =
+      _jajvmApplicationControllerProvider;
 
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version
@@ -56,9 +59,8 @@ class JajvmApplicationController {
     }
 
     // Create jajvm folder if it does not exist
-    fileSystemService
-      ..createJajvmFolder()
-      ..createVersionsFolder();
+    await fileSystemService.createJajvmFolder();
+    await fileSystemService.createVersionsFolder();
 
     // If setCurrentJavaHomeAsDefault is true, set the current java release as the default
     // - Copy the current JAVA_HOME folder to the jajvm `versions` folder
@@ -66,7 +68,7 @@ class JajvmApplicationController {
     // - reinitializeEnvironment()
     if (!setCurrentJavaHomeAsDefault) return;
 
-    final currentJavaHome = kJavaHomeDirectory;
+    final currentJavaHome = await fileSystemService.envJavaHomeDirectory;
     if (currentJavaHome == null) return;
 
     final JavaRelease javaRelease = await copySystemJavaRelease(
@@ -74,7 +76,7 @@ class JajvmApplicationController {
       alias: 'SystemJavaHome', // TODO: Use better name by parsing path for info
     );
     fileSystemService.createSymLink(
-      kDefaultLinkPath,
+      await fileSystemService.envDefaultLinkPath,
       javaRelease.path,
     );
 
@@ -87,7 +89,7 @@ class JajvmApplicationController {
   Future<io.Link> setGlobalJavaRelease(JavaRelease release) async {
     // Update symlink at `~/jajvm/default` to point to `release.directory.path`
     return fileSystemService.updateSymLink(
-      kDefaultLinkPath,
+      await fileSystemService.envDefaultLinkPath,
       release.path,
     );
   }
@@ -100,21 +102,24 @@ class JajvmApplicationController {
   Future<void> reinitializeEnvironment() async {
     if (!io.Platform.isWindows) throw UnimplementedError();
 
+    final defaultLinkPath = await fileSystemService.envDefaultLinkPath;
+    final defaultJavaBinPath = await fileSystemService.envDefaultJavaBinPath;
+
     // Set JAVA_HOME to `~/jajvm/default`
     await fileSystemService.writeEnvironmentVariable(
       kJavaHomeKey,
-      kDefaultLinkPath,
+      defaultLinkPath,
       global: true,
     );
 
     // Append default java release bin to system PATH if it is not already
     final path =
         await fileSystemService.readSystemEnvironmentVariable(kPathKey);
-    final hasBinInPath = path.trim().contains(kDefaultJavaBinPath);
+    final hasBinInPath = path.trim().contains(defaultJavaBinPath);
     if (!hasBinInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,
-        kDefaultJavaBinPath,
+        defaultJavaBinPath,
         global: true,
         append: true,
       );
@@ -123,11 +128,11 @@ class JajvmApplicationController {
     // Set JAVA_HOME to the default Java release
     final javaHomePath =
         await fileSystemService.readSystemEnvironmentVariable(kJavaHomeKey);
-    final hasJavaInPath = javaHomePath.trim().contains(kDefaultLinkPath);
+    final hasJavaInPath = javaHomePath.trim().contains(defaultLinkPath);
     if (!hasJavaInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,
-        kDefaultLinkPath,
+        defaultLinkPath,
         global: true,
       );
     }

@@ -1,44 +1,16 @@
 import 'dart:io';
 
-import 'package:path/path.dart';
-
 const String kJajvmHomeKey = 'JAJVM_HOME';
 const String kJavaHomeKey = 'JAVA_HOME';
 const String kPathKey = 'PATH';
+const String kDefaultFolderName = 'default';
+const String kBinFolderName = 'bin';
 
-// Code adapted from fvm: https://github.com/fluttertools/fvm/blob/main/lib/constants.dart
-
-Map<String, String> get kEnvVars => Platform.environment;
-
-/// User Home Path
-String get kUserHome {
+/// User Home Path Key
+String get kUserHomeKey {
   if (Platform.isWindows) {
-    return kEnvVars['UserProfile']!;
+    return 'UserProfile';
   } else {
-    return kEnvVars['HOME']!;
+    return 'HOME';
   }
 }
-
-/// FVM Home directory
-String get kJajvmHome {
-  final home = kEnvVars[kJajvmHomeKey];
-  if (home != null) {
-    return normalize(home);
-  }
-
-  return join(kUserHome, 'jajvm');
-}
-
-String get kPath {
-  return kEnvVars[kPathKey]!;
-}
-
-String get kJajvmVersionDirectory => join(kJajvmHome, 'versions');
-
-String? get kJavaHome => kEnvVars[kJavaHomeKey];
-
-Directory? get kJavaHomeDirectory =>
-    kJavaHome != null ? Directory(kJajvmHome) : null;
-
-String get kDefaultLinkPath => join(kJajvmHome, 'default');
-String get kDefaultJavaBinPath => join(kDefaultLinkPath, 'bin');

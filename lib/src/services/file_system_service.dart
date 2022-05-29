@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -26,13 +27,13 @@ class FileSystemService {
   /// Creates the jajvm folder at the directory defined by the
   /// environment variable `JAJVM_HOME`. If `JAJVM_HOME` is not
   /// defined, it defaults to [kUserHome]`/jajvm`.
-  void createJajvmFolder() {
-    createFolder(kJajvmHome);
+  Future<void> createJajvmFolder() async {
+    createFolder(await envJajvmHome);
   }
 
   /// Creates the jajvm `versions` folder in the [kJajvmHome] folder.
-  void createVersionsFolder() {
-    createFolder(kJajvmVersionDirectory);
+  Future<void> createVersionsFolder() async {
+    createFolder(await envJajvmVersionDirectory);
   }
 
   /// Creates a folder at the given path if it does not exist.
@@ -297,4 +298,45 @@ echo $value
       );
     }
   }
+
+  /// User Home Path
+  Future<String> get envUserHome async {
+    final userHome = await readEnvironmentVariable(kUserHomeKey);
+    return userHome!;
+  }
+
+  /// User Home Path
+  Future<String> get envPath async {
+    final userHome = await readEnvironmentVariable(kPathKey);
+    return userHome!;
+  }
+
+  /// Jajvm Home Path
+  Future<String> get envJajvmHome async {
+    final home = await readEnvironmentVariable(kJajvmHomeKey);
+    if (home != null) {
+      return normalize(home);
+    }
+
+    return join(await envUserHome, 'jajvm');
+  }
+
+  /// Jajvm Java Versions Path
+  Future<String> get envJajvmVersionDirectory async =>
+      join(await envJajvmHome, 'versions');
+
+  /// User Home Path
+  Future<String?> get envJavaHome async {
+    return await readEnvironmentVariable(kJavaHomeKey);
+  }
+
+  /// Java Home Path
+  Future<Directory?> get envJavaHomeDirectory async {
+    final home = await envJavaHome;
+    return home != null ? Directory(home) : null;
+  }
+
+  Future<String> get envDefaultLinkPath async => join(await envJajvmHome, kDefaultFolderName);
+
+  Future<String> get envDefaultJavaBinPath async => join(await envDefaultLinkPath, kBinFolderName);
 }
