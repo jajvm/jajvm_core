@@ -19,14 +19,19 @@ class FileSystemService {
 
   final Shell _shell;
 
+  /// Creates the jajvm folder at the directory defined by the
+  /// environment variable `JAJVM_HOME`. If `JAJVM_HOME` is not
+  /// defined, it defaults to [kUserHome]`/jajvm`.
   void createJajvmFolder() {
     createFolder(kJajvmHome);
   }
 
+  /// Creates the jajvm `versions` folder in the [kJajvmHome] folder.
   void createVersionsFolder() {
     createFolder(kJajvmVersionDirectory);
   }
 
+  /// Creates a folder at the given path if it does not exist.
   void createFolder(String path) {
     try {
       final dir = Directory(path);
