@@ -5,6 +5,7 @@ import 'package:riverpod/riverpod.dart';
 
 import '../constants/env_vars.dart';
 import '../constants/error_codes.dart';
+import '../constants/supported_platform.dart';
 import '../exceptions/jajvm_exception.dart';
 
 final _shellProvider = Provider((ref) => Shell());
@@ -133,8 +134,8 @@ class FileSystemService {
   Future<String?> readEnvironmentVariable(String key) async {
     if (!Platform.isWindows) throw UnimplementedError();
     try {
-      switch (_currentPlatform) {
-        case _SupportedPlatform.windows:
+      switch (kCurrentPlatform) {
+        case JajvmSupportedPlatform.windows:
           final result =
               await _shell.runExecutableArguments('echo', ['%$key%']);
           final text = result.outText.trim();
@@ -192,7 +193,7 @@ class FileSystemService {
   }) async {
     if (!Platform.isWindows) throw UnimplementedError();
 
-    if (_currentPlatform == _SupportedPlatform.windows) {
+    if (kCurrentPlatform == JajvmSupportedPlatform.windows) {
       if (global && !await isAdministratorMode()) {
         throw JajvmException(
           message:
@@ -238,7 +239,7 @@ class FileSystemService {
           code: JajvmExceptionCode.updateEnvironmentFailed,
         );
       }
-    } else if (_currentPlatform == _SupportedPlatform.linux) {
+    } else if (kCurrentPlatform == JajvmSupportedPlatform.linux) {
       if (global) {
         if (!await isAdministratorMode()) {
           throw JajvmException(
@@ -268,7 +269,7 @@ echo $value
           );
         }
       }
-    } else if (_currentPlatform == _SupportedPlatform.macos) {}
+    } else if (kCurrentPlatform == JajvmSupportedPlatform.macos) {}
   }
 
   /// Checks if the process is running as administrator or root/sudo.
@@ -276,8 +277,8 @@ echo $value
   /// Throws [JajvmException] if the shell command failed.
   Future<bool> isAdministratorMode() async {
     try {
-      switch (_currentPlatform) {
-        case _SupportedPlatform.windows:
+      switch (kCurrentPlatform) {
+        case JajvmSupportedPlatform.windows:
           final result =
               await _shell.runExecutableArguments('set', ['session']);
           return !result.outText.contains('Access is denied.');
@@ -293,17 +294,4 @@ echo $value
       );
     }
   }
-}
-
-enum _SupportedPlatform {
-  windows,
-  linux,
-  macos,
-}
-
-_SupportedPlatform get _currentPlatform {
-  if (Platform.isWindows) return _SupportedPlatform.windows;
-  if (Platform.isLinux) return _SupportedPlatform.linux;
-  if (Platform.isMacOS) return _SupportedPlatform.macos;
-  throw UnimplementedError();
 }
