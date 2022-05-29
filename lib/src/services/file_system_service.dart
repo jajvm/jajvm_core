@@ -36,6 +36,33 @@ class FileSystemService {
     }
   }
 
+  Link updateSymLink(String path, String target) {
+    try {
+      final type = FileSystemEntity.typeSync(path);
+      switch (type) {
+        case FileSystemEntityType.directory:
+          Directory(path).deleteSync(recursive: true);
+          return createSymLink(path, target);
+        case FileSystemEntityType.file:
+          File(path).deleteSync();
+          return createSymLink(path, target);
+        case FileSystemEntityType.link:
+          return Link(path)..updateSync(target);
+        case FileSystemEntityType.notFound:
+          return createSymLink(path, target);
+      }
+
+      // Should not get here
+      throw StateError('Error: Unknown file system entity type');
+    } on FileSystemException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not update symlink at "${e.path}": ${e.message}',
+        code: kCodeUpdateLinkFailed,
+      );
+    }
+  }
+
   Link createSymLink(String path, String target) {
     try {
       final link = Link(path);
@@ -44,7 +71,7 @@ class FileSystemService {
       final type = FileSystemEntity.typeSync(path);
       switch (type) {
         case FileSystemEntityType.directory:
-          Directory(path).deleteSync();
+          Directory(path).deleteSync(recursive: true);
           break;
         case FileSystemEntityType.file:
           File(path).deleteSync();

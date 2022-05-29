@@ -24,6 +24,8 @@ class JajvmApplicationController {
   });
 
   String get cacheDirectory => kJajvmHome;
+
+  /// The file system service which can be injected for testing purposes
   final FileSystemService fileSystemService;
 
   /// Initialize application: Creates jajvm folders and symlinks,
@@ -59,8 +61,14 @@ class JajvmApplicationController {
   }
 
   /// Set java release as global default
-  Future<void> setGlobalJavaRelease(JavaRelease release) async {
+  ///
+  /// Throws [JajvmException] if it fails to update the symlink
+  Future<io.Link> setGlobalJavaRelease(JavaRelease release) async {
     // Update symlink at `~/jajvm/default` to point to `release.directory.path`
+    return fileSystemService.updateSymLink(
+      kDefaultLinkPath,
+      release.path,
+    );
   }
 
   /// Reinitialize environment variables
