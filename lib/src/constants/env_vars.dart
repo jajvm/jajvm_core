@@ -27,6 +27,10 @@ String get kJajvmHome {
   return join(kUserHome, 'jajvm');
 }
 
+String get kPath {
+  return kEnvVars['PATH']!;
+}
+
 String get kJajvmVersionDirectory => join(kJajvmHome, 'versions');
 
 String? get kJavaHome => kEnvVars['JAVA_HOME'];

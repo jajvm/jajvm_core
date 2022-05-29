@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:riverpod/riverpod.dart';
 
-import '../constants/constants.dart';
+import '../constants/env_vars.dart';
 import '../constants/error_codes.dart';
 import '../exceptions/jajvm_exception.dart';
 

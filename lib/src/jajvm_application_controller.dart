@@ -1,6 +1,6 @@
 import 'package:riverpod/riverpod.dart';
 
-import 'constants/constants.dart';
+import 'constants/env_vars.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';
 import 'services/file_system_service.dart';
