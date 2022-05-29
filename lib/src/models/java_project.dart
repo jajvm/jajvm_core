@@ -13,7 +13,7 @@ class JavaProject extends Equatable {
   String get path => directory.path;
 
   /// The configured Java release
-  /// 
+  ///
   /// If null, the default Java release is used
   final JavaRelease? release;
 
@@ -42,7 +42,8 @@ class JavaProject extends Equatable {
   factory JavaProject.fromMap(Map<String, dynamic> map) {
     return JavaProject(
       directory: Directory(map['directory']),
-      release: map['release'] != null ? JavaRelease.fromMap(map['release']) : null,
+      release:
+          map['release'] != null ? JavaRelease.fromMap(map['release']) : null,
     );
   }
 

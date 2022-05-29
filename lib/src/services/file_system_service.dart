@@ -128,7 +128,7 @@ class FileSystemService {
   /// - [key] must not have spaces
   ///
   /// Returns null if the environment variable is not set.
-  /// 
+  ///
   /// Throws [JajvmException] if it fails to read the environment variable.
   Future<String?> readEnvironmentVariable(String key) async {
     if (!Platform.isWindows) throw UnimplementedError();
@@ -156,7 +156,7 @@ class FileSystemService {
   /// Read only windows system environment variables.
   ///
   /// Throws [UnimplementedError] if not on windows.
-  /// 
+  ///
   /// Throws [JajvmException] if it fails to read the environment variable.
   Future<String> readSystemEnvironmentVariable(String key) async {
     if (!Platform.isWindows) throw UnimplementedError();
