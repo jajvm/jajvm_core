@@ -136,7 +136,6 @@ class FileSystemService {
   ///
   /// Throws [JajvmException] if it fails to read the environment variable.
   Future<String?> readEnvironmentVariable(String key) async {
-    if (!Platform.isWindows) throw UnimplementedError();
     try {
       switch (kCurrentPlatform) {
         case JajvmSupportedPlatform.windows:
