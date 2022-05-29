@@ -118,12 +118,20 @@ class FileSystemService {
   ///
   /// Arguments:
   /// - [key] must not have spaces
+  /// - [value]
+  /// - [global] must be running as administrator or root/sudo to use
   Future<void> writeEnvironmentVariable(
     String key,
     String value, {
     bool global = false,
   }) async {
     if (!Platform.isWindows) throw UnimplementedError();
+    if (global && !await isAdministratorMode()) {
+      throw JajvmException(
+        message: 'Cannot write environment variable: Not running as administrator',
+        code: kCodeNotAdministrator,
+      );
+    }
 
     // Set the environment variable for the user or system
     final result = await _shell.runExecutableArguments('setx', [
