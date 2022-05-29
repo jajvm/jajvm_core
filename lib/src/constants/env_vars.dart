@@ -41,3 +41,4 @@ Directory? get kJavaHomeDirectory =>
     kJavaHome != null ? Directory(kJajvmHome) : null;
 
 String get kDefaultLinkPath => join(kJajvmHome, 'default');
+String get kDefaultJavaBinPath => join(kDefaultLinkPath, 'bin');

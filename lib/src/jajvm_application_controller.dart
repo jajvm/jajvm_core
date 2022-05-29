@@ -1,6 +1,9 @@
+import 'dart:io' as io;
+
 import 'package:riverpod/riverpod.dart';
 
 import 'constants/env_vars.dart';
+import 'exceptions/jajvm_exception.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';
 import 'services/file_system_service.dart';
@@ -71,11 +74,43 @@ class JajvmApplicationController {
     );
   }
 
-  /// Reinitialize environment variables
+  /// Reinitialize environment variables. 
+  /// 
+  /// TODO: Support platforms other than windows
+  ///
+  /// Throws [JajvmException] if the environment variables could not be set.
   Future<void> reinitializeEnvironment() async {
+    if (!io.Platform.isWindows) throw UnimplementedError();
+
     // Set JAVA_HOME to `~/jajvm/default`
-    // Remove all java releases from PATH
-    // Add `~/jajvm/default/bin` to PATH
+    await fileSystemService.writeEnvironmentVariable(
+      kJavaHomeKey,
+      kDefaultLinkPath,
+      global: true,
+    );
+
+    // Append default java release bin to system PATH if it is not already
+    final path = await fileSystemService.readSystemEnvironmentVariables(kPathKey);
+    final hasBinInPath = path.trim().contains(kDefaultJavaBinPath);
+    if (!hasBinInPath) {
+      await fileSystemService.writeEnvironmentVariable(
+        kPathKey,
+        kDefaultJavaBinPath,
+        global: true,
+        append: true,
+      );
+    }
+
+    // Set JAVA_HOME to the default Java release
+    final javaHomePath = await fileSystemService.readSystemEnvironmentVariables(kJavaHomeKey);
+    final hasJavaInPath = javaHomePath.trim().contains(kDefaultLinkPath);
+    if (!hasJavaInPath) {
+      await fileSystemService.writeEnvironmentVariable(
+        kPathKey,
+        kDefaultLinkPath,
+        global: true,
+      );
+    }
   }
 
   /// Copy java release on system to jajvm's version directory

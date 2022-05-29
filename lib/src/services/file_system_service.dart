@@ -138,6 +138,25 @@ class FileSystemService {
     }
   }
 
+  /// Read only windows system environment variables.
+  Future<String> readSystemEnvironmentVariables(String key) async {
+    if (!Platform.isWindows) throw UnimplementedError();
+
+    try {
+      final result = await _shell.runExecutableArguments('reg', [
+        'query',
+        'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment /v $key'
+      ]);
+      return result.outText;
+    } on ShellException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not read global environment variables: ${e.message}',
+        code: kCodeReadEnvironmentFailed,
+      );
+    }
+  }
+
   /// Write an environment variable to the system. Only works on windows.
   ///
   /// Arguments:
@@ -151,6 +170,7 @@ class FileSystemService {
     String value, {
     bool global = false,
     bool append = false,
+    String seperator = ';',
   }) async {
     if (!Platform.isWindows) throw UnimplementedError();
     if (global && !await isAdministratorMode()) {
@@ -166,7 +186,7 @@ class FileSystemService {
       final result = await _shell.runExecutableArguments('setx', [
         if (global) ...['/M'],
         key,
-        '${shellArgument(value)}${append ? ';%$key%' : ''}',
+        '${shellArgument(value)}${append ? '$seperator%$key%' : ''}',
       ]);
       if (!result.outText.contains('SUCCESS')) {
         throw JajvmException(
@@ -180,7 +200,7 @@ class FileSystemService {
       // the new value can be used immediately instead of having to
       // restart the application.
       await _shell.runExecutableArguments('set', [
-        '$key=$value${append ? ';%$key%' : ''}',
+        '$key=$value${append ? '$seperator%$key%' : ''}',
       ]);
       final expected = await _shell.runExecutableArguments('echo', ['%$key%']);
       if (expected.outText.contains('$key=$value')) return;
