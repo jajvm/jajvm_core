@@ -1,17 +1,23 @@
 import 'dart:io';
 
+import 'package:process_run/shell.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../constants/env_vars.dart';
 import '../constants/error_codes.dart';
 import '../exceptions/jajvm_exception.dart';
 
+final _shellProvider = Provider((ref) => Shell());
+
 final fileSystemProvider = Provider<FileSystemService>((ref) {
-  return FileSystemService();
+  final shell = ref.watch(_shellProvider);
+  return FileSystemService(shell);
 });
 
 class FileSystemService {
-  const FileSystemService();
+  FileSystemService([Shell? shell]) : _shell = shell ?? Shell();
+
+  final Shell _shell;
 
   void createJajvmFolder() {
     createFolder(kJajvmHome);
@@ -93,4 +99,79 @@ class FileSystemService {
       );
     }
   }
+
+  /// Read in an environment variable from the system. Only works on windows.
+  ///
+  /// Arguments:
+  /// - [key] must not have spaces
+  ///
+  /// Returns null if the environment variable is not set.
+  Future<String?> readEnvironmentVariable(String key) async {
+    if (!Platform.isWindows) throw UnimplementedError();
+
+    final result = await _shell.runExecutableArguments('echo', ['%$key%']);
+    final text = result.outText.trim();
+    return text == '%$key%' ? null : text;
+  }
+
+  /// Write an environment variable to the system. Only works on windows.
+  ///
+  /// Arguments:
+  /// - [key] must not have spaces
+  Future<void> writeEnvironmentVariable(
+    String key,
+    String value, {
+    bool global = false,
+  }) async {
+    if (!Platform.isWindows) throw UnimplementedError();
+
+    // Set the environment variable for the user or system
+    final result = await _shell.runExecutableArguments('setx', [
+      if (global) ...['/M'],
+      key,
+      shellArgument(value),
+    ]);
+    if (!result.outText.contains('SUCCESS')) {
+      throw JajvmException(
+        message: 'Could not set environment variable "$key" to "$value"',
+        code: kCodeUpdateEnvironmentFailed,
+      );
+    }
+
+    // Set the environment variable in the current session so that
+    // the new value can be used immediately instead of having to
+    // restart the application.
+    await _shell.runExecutableArguments('set', ['$key=$value']);
+    final expected = await _shell.runExecutableArguments('echo', ['%$key%']);
+    if (expected.outText.contains('$key=$value')) return;
+
+    throw JajvmException(
+      message: 'Could not set environment variable "$key" to "$value"',
+      code: kCodeUpdateEnvironmentFailed,
+    );
+  }
+
+  Future<bool> isAdministratorMode() async {
+    switch (_currentPlatform) {
+      case _SupportedPlatform.windows:
+        final result = await _shell.runExecutableArguments('set', ['session']);
+        return !result.outText.contains('Access is denied.');
+      default:
+        final result = await _shell.run('whoami');
+        return result.outText.contains('root');
+    }
+  }
+}
+
+enum _SupportedPlatform {
+  windows,
+  linux,
+  macos,
+}
+
+_SupportedPlatform get _currentPlatform {
+  if (Platform.isWindows) return _SupportedPlatform.windows;
+  if (Platform.isLinux) return _SupportedPlatform.linux;
+  if (Platform.isMacOS) return _SupportedPlatform.macos;
+  throw UnimplementedError();
 }
