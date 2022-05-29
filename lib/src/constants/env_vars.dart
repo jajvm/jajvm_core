@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 
 const String kJajvmHomeKey = 'JAJVM_HOME';
+const String kJavaHomeKey = 'JAVA_HOME';
 
 // Code adapted from fvm: https://github.com/fluttertools/fvm/blob/main/lib/constants.dart
 
@@ -33,7 +34,7 @@ String get kPath {
 
 String get kJajvmVersionDirectory => join(kJajvmHome, 'versions');
 
-String? get kJavaHome => kEnvVars['JAVA_HOME'];
+String? get kJavaHome => kEnvVars[kJavaHomeKey];
 
 Directory? get kJavaHomeDirectory =>
     kJavaHome != null ? Directory(kJajvmHome) : null;
