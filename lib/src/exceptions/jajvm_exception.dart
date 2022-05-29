@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+import '../constants/error_codes.dart';
+
 class JajvmException extends Equatable implements Exception {
   final String message;
-  final String code;
+  final JajvmExceptionCode code;
   late final DateTime time;
-  
+
   JajvmException({
     required this.message,
     required this.code,
@@ -19,12 +21,13 @@ class JajvmException extends Equatable implements Exception {
   List<Object> get props => [message, code, time];
 
   @override
-  String toString() => 'JajvmException(message: $message, code: $code, time: $time)';
+  String toString() =>
+      'JajvmException(message: $message, code: $code, time: $time)';
 
   Map<String, dynamic> toMap() {
     return {
       'message': message,
-      'code': code,
+      'code': code.name,
       'time': time.millisecondsSinceEpoch,
     };
   }
@@ -32,12 +35,13 @@ class JajvmException extends Equatable implements Exception {
   factory JajvmException.fromMap(Map<String, dynamic> map) {
     return JajvmException(
       message: map['message'] ?? '',
-      code: map['code'] ?? '',
+      code: JajvmExceptionCode.values.byName(map['code']),
       time: DateTime.fromMillisecondsSinceEpoch(map['time']),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory JajvmException.fromJson(String source) => JajvmException.fromMap(json.decode(source));
+  factory JajvmException.fromJson(String source) =>
+      JajvmException.fromMap(json.decode(source));
 }

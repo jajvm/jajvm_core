@@ -42,7 +42,7 @@ class FileSystemService {
       throw JajvmException(
         message:
             'Exception: Could not create folder at "${e.path}": ${e.message}',
-        code: kCodeCreateFolderFailed,
+        code: JajvmExceptionCode.createFolderFailed,
       );
     }
   }
@@ -73,14 +73,15 @@ class FileSystemService {
       throw JajvmException(
         message:
             'Exception: Could not update symlink at "${e.path}": ${e.message}',
-        code: kCodeUpdateLinkFailed,
+        code: JajvmExceptionCode.updateLinkFailed,
       );
     }
   }
 
   /// Create a symlink at `path` which points to `target`. On windows, the
-  /// application must be running as administrator, otherwise it will throw
-  /// [JajvmException].
+  /// application must be running as administrator or have developer mode
+  /// enabled: https://bit.ly/3vxRr2M, otherwise it will throw [JajvmException]
+  /// with code [JajvmExceptionCode.administratorRequired].
   ///
   /// Throws [JajvmException] if it fails to create the symlink.
   Link createSymLink(String path, String target) {
@@ -109,42 +110,55 @@ class FileSystemService {
         throw JajvmException(
           message:
               'Exception: Could not create symlink at "${e.path}" because not running with elevated priveleges: ${e.message}',
-          code: kCodeNotAdministrator,
+          code: JajvmExceptionCode.administratorRequired,
         );
       }
 
       throw JajvmException(
         message:
             'Exception: Could not create link from "$path" to "$target": ${e.message}',
-        code: kCodeCreateLinkFailed,
+        code: JajvmExceptionCode.createLinkFailed,
       );
     }
   }
 
-  /// Read in an environment variable from the system. Only works on windows.
+  /// Read in an environment variable from the system.
   ///
   /// Arguments:
   /// - [key] must not have spaces
   ///
   /// Returns null if the environment variable is not set.
+  /// 
+  /// Throws [JajvmException] if it fails to read the environment variable.
   Future<String?> readEnvironmentVariable(String key) async {
     if (!Platform.isWindows) throw UnimplementedError();
-
     try {
-      final result = await _shell.runExecutableArguments('echo', ['%$key%']);
-      final text = result.outText.trim();
-      return text == '%$key%' ? null : text;
+      switch (_currentPlatform) {
+        case _SupportedPlatform.windows:
+          final result =
+              await _shell.runExecutableArguments('echo', ['%$key%']);
+          final text = result.outText.trim();
+          return text == '%$key%' ? null : text;
+        default:
+          final result = await _shell.runExecutableArguments('printenv', [key]);
+          final text = result.outText.trim();
+          return text.isEmpty ? null : text;
+      }
     } on ShellException catch (e) {
       throw JajvmException(
         message:
             'Exception: Could not read environment variable "$key": ${e.message}',
-        code: kCodeReadEnvironmentFailed,
+        code: JajvmExceptionCode.readEnvironmentFailed,
       );
     }
   }
 
   /// Read only windows system environment variables.
-  Future<String> readSystemEnvironmentVariables(String key) async {
+  ///
+  /// Throws [UnimplementedError] if not on windows.
+  /// 
+  /// Throws [JajvmException] if it fails to read the environment variable.
+  Future<String> readSystemEnvironmentVariable(String key) async {
     if (!Platform.isWindows) throw UnimplementedError();
 
     try {
@@ -157,7 +171,7 @@ class FileSystemService {
       throw JajvmException(
         message:
             'Exception: Could not read global environment variables: ${e.message}',
-        code: kCodeReadEnvironmentFailed,
+        code: JajvmExceptionCode.readEnvironmentFailed,
       );
     }
   }
@@ -175,53 +189,86 @@ class FileSystemService {
     String value, {
     bool global = false,
     bool append = false,
-    String seperator = ';',
   }) async {
     if (!Platform.isWindows) throw UnimplementedError();
-    if (global && !await isAdministratorMode()) {
-      throw JajvmException(
-        message:
-            'Exception: Cannot write environment variable: Not running as administrator',
-        code: kCodeNotAdministrator,
-      );
-    }
 
-    try {
-      // Set the environment variable for the user or system
-      final result = await _shell.runExecutableArguments('setx', [
-        if (global) ...['/M'],
-        key,
-        '${shellArgument(value)}${append ? '$seperator%$key%' : ''}',
-      ]);
-      if (!result.outText.contains('SUCCESS')) {
+    if (_currentPlatform == _SupportedPlatform.windows) {
+      if (global && !await isAdministratorMode()) {
         throw JajvmException(
           message:
-              'Exception: Could not set environment variable "$key" to "$value"',
-          code: kCodeUpdateEnvironmentFailed,
+              'Exception: Cannot write environment variable: Not running as administrator or developer mode not enabled: https://bit.ly/3vxRr2M',
+          code: JajvmExceptionCode.administratorRequired,
         );
       }
 
-      // Set the environment variable in the current session so that
-      // the new value can be used immediately instead of having to
-      // restart the application.
-      await _shell.runExecutableArguments('set', [
-        '$key=$value${append ? '$seperator%$key%' : ''}',
-      ]);
-      final expected = await _shell.runExecutableArguments('echo', ['%$key%']);
-      if (expected.outText.contains('$key=$value')) return;
+      try {
+        // Set the environment variable for the user or system
+        final result = await _shell.runExecutableArguments('setx', [
+          if (global) ...['/M'],
+          key,
+          '${shellArgument(value)}${append ? ';%$key%' : ''}',
+        ]);
+        if (!result.outText.contains('SUCCESS')) {
+          throw JajvmException(
+            message:
+                'Exception: Could not set environment variable "$key" to "$value"',
+            code: JajvmExceptionCode.updateEnvironmentFailed,
+          );
+        }
 
-      throw JajvmException(
-        message:
-            'Exception: Could not set environment variable "$key" to "$value"',
-        code: kCodeUpdateEnvironmentFailed,
-      );
-    } on ShellException catch (e) {
-      throw JajvmException(
-        message:
-            'Exception: Could not set environment variable "$key" to "$value": ${e.message}',
-        code: kCodeUpdateEnvironmentFailed,
-      );
-    }
+        // Set the environment variable in the current session so that
+        // the new value can be used immediately instead of having to
+        // restart the application.
+        await _shell.runExecutableArguments('set', [
+          '$key=$value${append ? ';%$key%' : ''}',
+        ]);
+        final expected =
+            await _shell.runExecutableArguments('echo', ['%$key%']);
+        if (expected.outText.contains('$key=$value')) return;
+
+        throw JajvmException(
+          message:
+              'Exception: Could not set environment variable "$key" to "$value"',
+          code: JajvmExceptionCode.updateEnvironmentFailed,
+        );
+      } on ShellException catch (e) {
+        throw JajvmException(
+          message:
+              'Exception: Could not set environment variable "$key" to "$value": ${e.message}',
+          code: JajvmExceptionCode.updateEnvironmentFailed,
+        );
+      }
+    } else if (_currentPlatform == _SupportedPlatform.linux) {
+      if (global) {
+        if (!await isAdministratorMode()) {
+          throw JajvmException(
+            message:
+                'Exception: Cannot write environment variable: Not running as administrator or developer mode not enabled: https://bit.ly/3vxRr2M',
+            code: JajvmExceptionCode.administratorRequired,
+          );
+        }
+
+        try {
+          final result = await _shell.run('''
+sudo touch /etc/profile.d/http_proxy.sh
+echo $value
+''');
+          if (!result.outText.contains('SUCCESS')) {
+            throw JajvmException(
+              message:
+                  'Exception: Could not set environment variable "$key" to "$value"',
+              code: JajvmExceptionCode.updateEnvironmentFailed,
+            );
+          }
+        } on ShellException catch (e) {
+          throw JajvmException(
+            message:
+                'Exception: Could not set environment variable "$key" to "$value": ${e.message}',
+            code: JajvmExceptionCode.updateEnvironmentFailed,
+          );
+        }
+      }
+    } else if (_currentPlatform == _SupportedPlatform.macos) {}
   }
 
   /// Checks if the process is running as administrator or root/sudo.
@@ -242,7 +289,7 @@ class FileSystemService {
       throw JajvmException(
         message:
             'Exception: Could not determine if running as administrator: ${e.message}',
-        code: kCodeCheckAdministratorFailed,
+        code: JajvmExceptionCode.checkAdministratorFailed,
       );
     }
   }

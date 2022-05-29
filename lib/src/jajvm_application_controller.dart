@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:riverpod/riverpod.dart';
 
 import 'constants/env_vars.dart';
+import 'constants/error_codes.dart';
 import 'exceptions/jajvm_exception.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';
@@ -26,8 +27,6 @@ class JajvmApplicationController {
     FileSystemService? fileSystemService,
   }) : fileSystemService = fileSystemService ?? FileSystemService();
 
-  String get cacheDirectory => kJajvmHome;
-
   /// The file system service which can be injected for testing purposes
   final FileSystemService fileSystemService;
 
@@ -35,8 +34,24 @@ class JajvmApplicationController {
   /// and optionally sets the default java release to the java version
   /// already installed after copying it to the jajvm `versions` folder.
   ///
+  /// Must be running as administrator or have developer mode enabled
+  /// (https://bit.ly/3vxRr2Mon) if on Windows and [setCurrentJavaHomeAsDefault]
+  /// if true, otherwise it will throw [JajvmException]
+  /// with code [JajvmExceptionCode.administratorRequired].
+  ///
   /// Throws [JajvmException] if it fails to create the folder or symlink
   Future<void> initialize({bool setCurrentJavaHomeAsDefault = false}) async {
+    final isAdminAndNeedsAdmin =
+        await fileSystemService.isAdministratorMode() &&
+            setCurrentJavaHomeAsDefault;
+    if (isAdminAndNeedsAdmin) {
+      throw JajvmException(
+        message:
+            'Administrator privileges required to set the current java home as default',
+        code: JajvmExceptionCode.administratorRequired,
+      );
+    }
+
     // Create jajvm folder if it does not exist
     fileSystemService
       ..createJajvmFolder()
@@ -74,8 +89,8 @@ class JajvmApplicationController {
     );
   }
 
-  /// Reinitialize environment variables. 
-  /// 
+  /// Reinitialize environment variables.
+  ///
   /// TODO: Support platforms other than windows
   ///
   /// Throws [JajvmException] if the environment variables could not be set.
@@ -90,7 +105,8 @@ class JajvmApplicationController {
     );
 
     // Append default java release bin to system PATH if it is not already
-    final path = await fileSystemService.readSystemEnvironmentVariables(kPathKey);
+    final path =
+        await fileSystemService.readSystemEnvironmentVariable(kPathKey);
     final hasBinInPath = path.trim().contains(kDefaultJavaBinPath);
     if (!hasBinInPath) {
       await fileSystemService.writeEnvironmentVariable(
@@ -102,7 +118,8 @@ class JajvmApplicationController {
     }
 
     // Set JAVA_HOME to the default Java release
-    final javaHomePath = await fileSystemService.readSystemEnvironmentVariables(kJavaHomeKey);
+    final javaHomePath =
+        await fileSystemService.readSystemEnvironmentVariable(kJavaHomeKey);
     final hasJavaInPath = javaHomePath.trim().contains(kDefaultLinkPath);
     if (!hasJavaInPath) {
       await fileSystemService.writeEnvironmentVariable(
