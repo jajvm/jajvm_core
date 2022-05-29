@@ -42,6 +42,10 @@ class FileSystemService {
     }
   }
 
+  /// Updates a [Link] to point to a new path. If a [FileSystemEntity] already
+  /// exists at [path], it will be deleted and a new [Link] will be created.
+  ///
+  /// Throws [JajvmException] if it fails to update the [Link]
   Link updateSymLink(String path, String target) {
     try {
       final type = FileSystemEntity.typeSync(path);
@@ -69,6 +73,11 @@ class FileSystemService {
     }
   }
 
+  /// Create a symlink at `path` which points to `target`. On windows, the
+  /// application must be running as administrator, otherwise it will throw
+  /// [JajvmException].
+  ///
+  /// Throws [JajvmException] if it fails to create the symlink.
   Link createSymLink(String path, String target) {
     try {
       final link = Link(path);
