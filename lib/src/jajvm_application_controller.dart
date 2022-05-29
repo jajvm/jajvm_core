@@ -14,8 +14,8 @@ class Awesome {
   bool get isAwesome => true;
 }
 
-final jajvmApplicationControllerProvider = Provider((ref) {
-  final FileSystemService fileSystemService = ref.watch(fileSystemProvider);
+final _jajvmApplicationControllerProvider = Provider<JajvmApplicationController>((ref) {
+  final FileSystemService fileSystemService = ref.watch(FileSystemService.provider);
 
   return JajvmApplicationController(
     fileSystemService: fileSystemService,
@@ -29,6 +29,9 @@ class JajvmApplicationController {
 
   /// The file system service which can be injected for testing purposes
   final FileSystemService fileSystemService;
+
+  /// Riverpod Provider for the instance of this class
+  static Provider<JajvmApplicationController> provider = _jajvmApplicationControllerProvider;
 
   /// Initialize application: Creates jajvm folders and symlinks,
   /// and optionally sets the default java release to the java version

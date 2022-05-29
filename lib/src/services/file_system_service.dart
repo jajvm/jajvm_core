@@ -10,7 +10,7 @@ import '../exceptions/jajvm_exception.dart';
 
 final _shellProvider = Provider((ref) => Shell());
 
-final fileSystemProvider = Provider<FileSystemService>((ref) {
+final _fileSystemProvider = Provider<FileSystemService>((ref) {
   final shell = ref.watch(_shellProvider);
   return FileSystemService(shell);
 });
@@ -19,6 +19,9 @@ class FileSystemService {
   FileSystemService([Shell? shell]) : _shell = shell ?? Shell();
 
   final Shell _shell;
+
+  /// Riverpod Provider for the instance of this class
+  static Provider<FileSystemService> provider = _fileSystemProvider;
 
   /// Creates the jajvm folder at the directory defined by the
   /// environment variable `JAJVM_HOME`. If `JAJVM_HOME` is not
