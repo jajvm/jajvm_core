@@ -20,8 +20,8 @@ final jajvmApplicationControllerProvider = Provider((ref) {
 
 class JajvmApplicationController {
   JajvmApplicationController({
-    this.fileSystemService = const FileSystemService(),
-  });
+    FileSystemService? fileSystemService,
+  }) : fileSystemService = fileSystemService ?? FileSystemService();
 
   String get cacheDirectory => kJajvmHome;
 
