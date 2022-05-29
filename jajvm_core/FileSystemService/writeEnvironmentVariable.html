@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the writeEnvironmentVariable method from the FileSystemService class, for the Dart programming language.">
+  <title>writeEnvironmentVariable method - FileSystemService class - jajvm_core library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">jajvm_core</a></li>
+    <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
+    <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
+    <li class="self-crumb">writeEnvironmentVariable method</li>
+  </ol>
+  <div class="self-name">writeEnvironmentVariable</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">writeEnvironmentVariable</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">writeEnvironmentVariable</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="writeEnvironmentVariable-param-key"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span></li>
+<li><span class="parameter" id="writeEnvironmentVariable-param-value"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">value</span>, </span></li>
+<li><span class="parameter" id="writeEnvironmentVariable-param-global">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">global</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="writeEnvironmentVariable-param-append"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">append</span> = <span class="default-value">false</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Write an environment variable to the system. Only works on windows.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>key</code> must not have spaces</li>
+<li><code>value</code></li>
+<li><code>global</code> must be running as administrator or root/sudo to use</li>
+</ul>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if the environment variable could not be set.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; writeEnvironmentVariable(
+  String key,
+  String value, {
+  bool global = false,
+  bool append = false,
+}) async {
+  if (!Platform.isWindows) throw UnimplementedError();
+
+  if (kCurrentPlatform == JajvmSupportedPlatform.windows) {
+    if (global &amp;&amp; !await isAdministratorMode()) {
+      throw JajvmException(
+        message:
+            &#39;Exception: Cannot write environment variable: Not running as administrator or developer mode not enabled: https:&#47;&#47;bit.ly&#47;3vxRr2M&#39;,
+        code: JajvmExceptionCode.administratorRequired,
+      );
+    }
+
+    try {
+      &#47;&#47; Set the environment variable for the user or system
+      final result = await _shell.runExecutableArguments(&#39;setx&#39;, [
+        if (global) ...[&#39;&#47;M&#39;],
+        key,
+        &#39;${shellArgument(value)}${append ? &#39;;%$key%&#39; : &#39;&#39;}&#39;,
+      ]);
+      if (!result.outText.contains(&#39;SUCCESS&#39;)) {
+        throw JajvmException(
+          message:
+              &#39;Exception: Could not set environment variable &quot;$key&quot; to &quot;$value&quot;&#39;,
+          code: JajvmExceptionCode.updateEnvironmentFailed,
+        );
+      }
+
+      &#47;&#47; Set the environment variable in the current session so that
+      &#47;&#47; the new value can be used immediately instead of having to
+      &#47;&#47; restart the application.
+      await _shell.runExecutableArguments(&#39;set&#39;, [
+        &#39;$key=$value${append ? &#39;;%$key%&#39; : &#39;&#39;}&#39;,
+      ]);
+      final expected =
+          await _shell.runExecutableArguments(&#39;echo&#39;, [&#39;%$key%&#39;]);
+      if (expected.outText.contains(&#39;$key=$value&#39;)) return;
+
+      throw JajvmException(
+        message:
+            &#39;Exception: Could not set environment variable &quot;$key&quot; to &quot;$value&quot;&#39;,
+        code: JajvmExceptionCode.updateEnvironmentFailed,
+      );
+    } on ShellException catch (e) {
+      throw JajvmException(
+        message:
+            &#39;Exception: Could not set environment variable &quot;$key&quot; to &quot;$value&quot;: ${e.message}&#39;,
+        code: JajvmExceptionCode.updateEnvironmentFailed,
+      );
+    }
+  } else if (kCurrentPlatform == JajvmSupportedPlatform.linux) {
+    if (global) {
+      if (!await isAdministratorMode()) {
+        throw JajvmException(
+          message:
+              &#39;Exception: Cannot write environment variable: Not running as administrator or developer mode not enabled: https:&#47;&#47;bit.ly&#47;3vxRr2M&#39;,
+          code: JajvmExceptionCode.administratorRequired,
+        );
+      }
+
+      try {
+        final result = await _shell.run(&#39;&#39;&#39;
+sudo touch &#47;etc&#47;profile.d&#47;http_proxy.sh
+echo $value
+&#39;&#39;&#39;);
+        if (!result.outText.contains(&#39;SUCCESS&#39;)) {
+          throw JajvmException(
+            message:
+                &#39;Exception: Could not set environment variable &quot;$key&quot; to &quot;$value&quot;&#39;,
+            code: JajvmExceptionCode.updateEnvironmentFailed,
+          );
+        }
+      } on ShellException catch (e) {
+        throw JajvmException(
+          message:
+              &#39;Exception: Could not set environment variable &quot;$key&quot; to &quot;$value&quot;: ${e.message}&#39;,
+          code: JajvmExceptionCode.updateEnvironmentFailed,
+        );
+      }
+    }
+  } else if (kCurrentPlatform == JajvmSupportedPlatform.macos) {}
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">jajvm_core</a></li>
+  <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
+  <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
+  <li class="self-crumb">writeEnvironmentVariable method</li>
+</ol>
+
+
+    <h5>FileSystemService class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../jajvm_core/FileSystemService-class.html#constructors">Constructors</a></li>
+          <li><a href="../../jajvm_core/FileSystemService/FileSystemService.html">FileSystemService</a></li>
+
+
+    <li class="section-title inherited">
+      <a href="../../jajvm_core/FileSystemService-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../jajvm_core/FileSystemService-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/createFolder.html">createFolder</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/createJajvmFolder.html">createJajvmFolder</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/createSymLink.html">createSymLink</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/createVersionsFolder.html">createVersionsFolder</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/isAdministratorMode.html">isAdministratorMode</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/readEnvironmentVariable.html">readEnvironmentVariable</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/readSystemEnvironmentVariable.html">readSystemEnvironmentVariable</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/updateSymLink.html">updateSymLink</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/writeEnvironmentVariable.html">writeEnvironmentVariable</a></li>
+
+    <li class="section-title inherited"><a href="../../jajvm_core/FileSystemService-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    jajvm_core
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
