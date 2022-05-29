@@ -150,6 +150,7 @@ class FileSystemService {
     String key,
     String value, {
     bool global = false,
+    bool append = false,
   }) async {
     if (!Platform.isWindows) throw UnimplementedError();
     if (global && !await isAdministratorMode()) {
@@ -165,7 +166,7 @@ class FileSystemService {
       final result = await _shell.runExecutableArguments('setx', [
         if (global) ...['/M'],
         key,
-        shellArgument(value),
+        '${shellArgument(value)}${append ? ';%$key%' : ''}',
       ]);
       if (!result.outText.contains('SUCCESS')) {
         throw JajvmException(
@@ -178,7 +179,9 @@ class FileSystemService {
       // Set the environment variable in the current session so that
       // the new value can be used immediately instead of having to
       // restart the application.
-      await _shell.runExecutableArguments('set', ['$key=$value']);
+      await _shell.runExecutableArguments('set', [
+        '$key=$value${append ? ';%$key%' : ''}',
+      ]);
       final expected = await _shell.runExecutableArguments('echo', ['%$key%']);
       if (expected.outText.contains('$key=$value')) return;
 
