@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the initialize method from the JajvmApplicationController class, for the Dart programming language.">
+  <title>initialize method - JajvmApplicationController class - jajvm_core library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">jajvm_core</a></li>
+    <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
+    <li class="self-crumb">initialize method</li>
+  </ol>
+  <div class="self-name">initialize</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">initialize</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">initialize</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="initialize-param-setCurrentJavaHomeAsDefault">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">setCurrentJavaHomeAsDefault</span> = <span class="default-value">false</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Initialize application: Creates jajvm folders and symlinks,
+and optionally sets the default java release to the java version
+already installed after copying it to the jajvm <code>versions</code> folder.</p>
+<p>Must be running as administrator or have developer mode enabled
+(<a href="https://bit.ly/3vxRr2Mon">https://bit.ly/3vxRr2Mon</a>) if on Windows and <code>setCurrentJavaHomeAsDefault</code>
+if true, otherwise it will throw <code>JajvmException</code>
+with code <code>JajvmExceptionCode.administratorRequired</code>.</p>
+<p>Throws <code>JajvmException</code> if it fails to create the folder or symlink</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; initialize({bool setCurrentJavaHomeAsDefault = false}) async {
+  final isAdminAndNeedsAdmin =
+      await fileSystemService.isAdministratorMode() &amp;&amp;
+          setCurrentJavaHomeAsDefault;
+  if (isAdminAndNeedsAdmin) {
+    throw JajvmException(
+      message:
+          &#39;Administrator privileges required to set the current java home as default&#39;,
+      code: JajvmExceptionCode.administratorRequired,
+    );
+  }
+
+  &#47;&#47; Create jajvm folder if it does not exist
+  fileSystemService
+    ..createJajvmFolder()
+    ..createVersionsFolder();
+
+  &#47;&#47; If setCurrentJavaHomeAsDefault is true, set the current java release as the default
+  &#47;&#47; - Copy the current JAVA_HOME folder to the jajvm `versions` folder
+  &#47;&#47; - Create symlink at `~&#47;jajvm&#47;default` which points to `~&#47;jajvm&#47;versions&#47;&lt;new-release&gt;`
+  &#47;&#47; - reinitializeEnvironment()
+  if (!setCurrentJavaHomeAsDefault) return;
+
+  final currentJavaHome = kJavaHomeDirectory;
+  if (currentJavaHome == null) return;
+
+  final JavaRelease javaRelease = await copySystemJavaRelease(
+    path: currentJavaHome.path,
+    alias: &#39;SystemJavaHome&#39;, &#47;&#47; TODO: Use better name by parsing path for info
+  );
+  fileSystemService.createSymLink(
+    kDefaultLinkPath,
+    javaRelease.path,
+  );
+
+  await reinitializeEnvironment();
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">jajvm_core</a></li>
+  <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
+  <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
+  <li class="self-crumb">initialize method</li>
+</ol>
+
+
+    <h5>JajvmApplicationController class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#constructors">Constructors</a></li>
+          <li><a href="../../jajvm_core/JajvmApplicationController/JajvmApplicationController.html">JajvmApplicationController</a></li>
+
+
+    <li class="section-title">
+      <a href="../../jajvm_core/JajvmApplicationController-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/fileSystemService.html">fileSystemService</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/addProject.html">addProject</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/changeTerminalSessionJavaRelease.html">changeTerminalSessionJavaRelease</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/copySystemJavaRelease.html">copySystemJavaRelease</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/deleteJavaRelease.html">deleteJavaRelease</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/findProjects.html">findProjects</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/initialize.html">initialize</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/installJavaVersion.html">installJavaVersion</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/listJavaReleases.html">listJavaReleases</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/listProjects.html">listProjects</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/openProjectInEditor.html">openProjectInEditor</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/purge.html">purge</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/reinitializeEnvironment.html">reinitializeEnvironment</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/searchForJavaReleases.html">searchForJavaReleases</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/setGlobalJavaRelease.html">setGlobalJavaRelease</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/useJavaReleaseInFolder.html">useJavaReleaseInFolder</a></li>
+
+    <li class="section-title inherited"><a href="../../jajvm_core/JajvmApplicationController-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    jajvm_core
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
