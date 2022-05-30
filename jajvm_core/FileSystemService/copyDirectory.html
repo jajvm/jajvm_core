@@ -64,6 +64,12 @@
 <section class="desc markdown">
   <p>Copy a directory to a new location using shell</p>
 <p>This will override any files that exist in the destination with the same name</p>
+<p>Arguments:</p>
+<ul>
+<li><code>source</code> full path to the source directory, should include the drive letter</li>
+<li><code>destination</code> full path to the destination directory, should include the drive letter</li>
+</ul>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if the directory could not be copied</p>
 </section>
 
 
@@ -92,14 +98,13 @@
         final result = await _shell.runExecutableArguments(
             &#39;cp&#39;, [&#39;-r&#39;, join(source, &#39;*&#39;), destination]);
         &#47;&#47; Success exit code is 0: https:&#47;&#47;www.gnu.org&#47;software&#47;coreutils&#47;manual&#47;html_node&#47;cp-invocation.html#cp-invocation
-        if (result.exitCode &gt; 0) {
-          throw JajvmException(
-            message:
-                &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;&#39;,
-            code: JajvmExceptionCode.copyDirectoryFailed,
-          );
-        }
-        break;
+        if (result.exitCode == 0) return;
+
+        throw JajvmException(
+          message:
+              &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;&#39;,
+          code: JajvmExceptionCode.copyDirectoryFailed,
+        );
     }
   } on ShellException catch (e) {
     throw JajvmException(
