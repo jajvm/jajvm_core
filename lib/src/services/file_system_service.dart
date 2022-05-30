@@ -142,7 +142,7 @@ class FileSystemService {
               await _shell.runExecutableArguments('net', ['session']);
           return !result.outText.contains('Access is denied.');
         default:
-          final result = await _shell.run('whoami');
+          final result = await _shell.runExecutableArguments('whoami', []);
           return result.outText.contains('root');
       }
     } on ShellException catch (e) {
