@@ -376,7 +376,7 @@ echo \$$key
   }
 
   /// Copy a directory to a new location using shell
-  /// 
+  ///
   /// This will override any files that exist in the destination with the same name
   Future<void> copyDirectory(String source, String destination) async {
     try {
@@ -384,24 +384,24 @@ echo \$$key
         case JajvmSupportedPlatform.windows:
           final result = await _shell.runExecutableArguments(
               'xcopy', [source, destination, '/s', '/e', '/y']);
-          if (result.exitCode == 4) {
-            throw JajvmException(
-              message: 'Exception: Could not copy directory "$source" to "$destination": Initialization error occurred. There is not enough memory or disk space, or you entered an invalid drive name or invalid syntax on the command line.',
-              code: JajvmExceptionCode.copyDirectoryFailed,
-            );
-          } else if(result.exitCode == 5) {
-            throw JajvmException(
-              message: 'Exception: Could not copy directory "$source" to "$destination": Disk write error occurred.',
-              code: JajvmExceptionCode.copyDirectoryFailed,
-            );
-          }
-          break;
+          // Failure exit codes are 4 and 5: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/xcopy
+          if (result.exitCode <= 3 || result.exitCode > 5) return;
+
+          final message = result.exitCode == 4
+              ? 'Exception: Could not copy directory "$source" to "$destination": Initialization error occurred. There is not enough memory or disk space, or you entered an invalid drive name or invalid syntax on the command line.'
+              : 'Exception: Could not copy directory "$source" to "$destination": Disk write error occurred.';
+
+          throw JajvmException(
+            message: message,
+            code: JajvmExceptionCode.copyDirectoryFailed,
+          );
         default:
           final result = await _shell.runExecutableArguments(
               'cp', ['-r', join(source, '*'), destination]);
           if (result.exitCode > 0) {
             throw JajvmException(
-              message: 'Exception: Could not copy directory "$source" to "$destination"',
+              message:
+                  'Exception: Could not copy directory "$source" to "$destination"',
               code: JajvmExceptionCode.copyDirectoryFailed,
             );
           }
