@@ -96,12 +96,8 @@ class JajvmApplicationController {
 
   /// Reinitialize environment variables.
   ///
-  /// TODO: Support platforms other than windows
-  ///
   /// Throws [JajvmException] if the environment variables could not be set.
   Future<void> reinitializeEnvironment() async {
-    if (!io.Platform.isWindows) throw UnimplementedError();
-
     final defaultLinkPath = await fileSystemService.envDefaultLinkPath;
     final defaultJavaBinPath = await fileSystemService.envDefaultJavaBinPath;
 
