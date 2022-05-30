@@ -9,77 +9,178 @@ class JavaRelease extends Equatable {
   final Directory directory;
   String get path => directory.path;
 
-  /// The version number of the Java release
-  final String? version;
-
-  /// The name of the vendor given by the user
-  final String? vendor;
-
   /// The unique nickname given by the user for this
   final String? alias;
 
-  late final String id;
+  /// Parsed from the java `release` file
+  final String? javaVersion;
+
+  /// Parsed from the java `release` file
+  final String? javaVersionDate;
+
+  /// Parsed from the java `release` file
+  final String? implementor;
+
+  /// Parsed from the java `release` file
+  final String? implementorVersion;
+
+  final String? modules;
+
+  final String? osArchitecture;
+
+  final String? osName;
+
+  final String? fullVersion;
+
+  final String? semanticVersion;
+
+  final String? buildInfo;
+
+  final String? jvmVariant;
+
+  final String? jvmVersion;
+
+  final String? imageType;
+
+  late final String uid;
 
   static const _uuid = Uuid();
 
+  JavaRelease({
+    required this.directory,
+    required this.javaVersionDate,
+    required this.implementorVersion,
+    required this.modules,
+    required this.osArchitecture,
+    required this.osName,
+    required this.fullVersion,
+    required this.semanticVersion,
+    required this.buildInfo,
+    required this.jvmVariant,
+    required this.jvmVersion,
+    required this.imageType,
+    required this.javaVersion,
+    required this.implementor,
+    required this.alias,
+    required String? uid,
+  }) {
+    this.uid = uid ?? _uuid.v4();
+  }
+
   factory JavaRelease.fromPath({
     required String path,
-    String? version,
-    String? vendor,
+    String? javaVersionDate,
+    String? javaVersion,
+    String? implementorVersion,
+    String? implementor,
+    String? modules,
+    String? osArchitecture,
+    String? osName,
+    String? fullVersion,
+    String? semanticVersion,
+    String? buildInfo,
+    String? jvmVariant,
+    String? jvmVersion,
+    String? imageType,
     String? alias,
-    String? id,
+    String? uid,
   }) =>
       JavaRelease(
         directory: Directory(path),
-        version: version,
-        vendor: vendor,
+        javaVersion: javaVersion,
+        implementor: implementor,
         alias: alias,
-        id: id,
+        uid: uid,
+        buildInfo: buildInfo,
+        fullVersion: fullVersion,
+        imageType: imageType,
+        implementorVersion: implementorVersion,
+        javaVersionDate: javaVersionDate,
+        jvmVariant: jvmVariant,
+        jvmVersion: jvmVersion,
+        modules: modules,
+        osArchitecture: osArchitecture,
+        osName: osName,
+        semanticVersion: semanticVersion,
       );
-
-  JavaRelease({
-    required this.directory,
-    this.version,
-    this.vendor,
-    this.alias,
-    String? id,
-  }) {
-    this.id = id ?? _uuid.v4();
-  }
 
   JavaRelease copyWith({
     Directory? directory,
-    String? version,
-    String? vendor,
     String? alias,
-    String? id,
+    String? javaVersion,
+    String? javaVersionDate,
+    String? implementor,
+    String? implementorVersion,
+    String? modules,
+    String? osArchitecture,
+    String? osName,
+    String? fullVersion,
+    String? semanticVersion,
+    String? buildInfo,
+    String? jvmVariant,
+    String? jvmVersion,
+    String? imageType,
+    String? uid,
   }) {
     return JavaRelease(
       directory: directory ?? this.directory,
-      version: version ?? this.version,
-      vendor: vendor ?? this.vendor,
       alias: alias ?? this.alias,
-      id: id ?? this.id,
+      javaVersion: javaVersion ?? this.javaVersion,
+      javaVersionDate: javaVersionDate ?? this.javaVersionDate,
+      implementor: implementor ?? this.implementor,
+      implementorVersion: implementorVersion ?? this.implementorVersion,
+      modules: modules ?? this.modules,
+      osArchitecture: osArchitecture ?? this.osArchitecture,
+      osName: osName ?? this.osName,
+      fullVersion: fullVersion ?? this.fullVersion,
+      semanticVersion: semanticVersion ?? this.semanticVersion,
+      buildInfo: buildInfo ?? this.buildInfo,
+      jvmVariant: jvmVariant ?? this.jvmVariant,
+      jvmVersion: jvmVersion ?? this.jvmVersion,
+      imageType: imageType ?? this.imageType,
+      uid: uid ?? this.uid,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'directory': directory.path,
-      'version': version,
-      'vendor': vendor,
       'alias': alias,
-      'id': id,
+      'javaVersion': javaVersion,
+      'javaVersionDate': javaVersionDate,
+      'implementor': implementor,
+      'implementorVersion': implementorVersion,
+      'modules': modules,
+      'osArchitecture': osArchitecture,
+      'osName': osName,
+      'fullVersion': fullVersion,
+      'semanticVersion': semanticVersion,
+      'buildInfo': buildInfo,
+      'jvmVariant': jvmVariant,
+      'jvmVersion': jvmVersion,
+      'imageType': imageType,
+      'uid': uid,
     };
   }
 
   factory JavaRelease.fromMap(Map<String, dynamic> map) {
     return JavaRelease(
       directory: Directory(map['directory']),
-      version: map['version'],
-      vendor: map['vendor'],
       alias: map['alias'],
-      id: map['id'] ?? '',
+      javaVersion: map['javaVersion'],
+      javaVersionDate: map['javaVersionDate'],
+      implementor: map['implementor'],
+      implementorVersion: map['implementorVersion'],
+      modules: map['modules'],
+      osArchitecture: map['osArchitecture'],
+      osName: map['osName'],
+      fullVersion: map['fullVersion'],
+      semanticVersion: map['semanticVersion'],
+      buildInfo: map['buildInfo'],
+      jvmVariant: map['jvmVariant'],
+      jvmVersion: map['jvmVersion'],
+      imageType: map['imageType'],
+      uid: map['uid'] ?? '',
     );
   }
 
@@ -90,17 +191,28 @@ class JavaRelease extends Equatable {
 
   @override
   String toString() {
-    return 'JavaRelease(directory: $directory, version: $version, vendor: $vendor, alias: $alias, id: $id)';
+    return 'JavaRelease(directory: $directory, alias: $alias, javaVersion: $javaVersion, javaVersionDate: $javaVersionDate, implementor: $implementor, implementorVersion: $implementorVersion, modules: $modules, osArchitecture: $osArchitecture, osName: $osName, fullVersion: $fullVersion, semanticVersion: $semanticVersion, buildInfo: $buildInfo, jvmVariant: $jvmVariant, jvmVersion: $jvmVersion, imageType: $imageType, uid: $uid)';
   }
 
   @override
   List<Object> get props {
     return [
       directory,
-      version ?? 'no version',
-      vendor ?? 'no vendor',
-      alias ?? 'no alias',
-      id,
+      alias ?? '',
+      javaVersion ?? '',
+      javaVersionDate ?? '',
+      implementor ?? '',
+      implementorVersion ?? '',
+      modules ?? '',
+      osArchitecture ?? '',
+      osName ?? '',
+      fullVersion ?? '',
+      semanticVersion ?? '',
+      buildInfo ?? '',
+      jvmVariant ?? '',
+      jvmVersion ?? '',
+      imageType ?? '',
+      uid,
     ];
   }
 }

@@ -141,7 +141,7 @@ class JajvmApplicationController {
   Future<JavaRelease> addSystemJavaRelease({
     required String path,
     String? version,
-    String? vendor,
+    String? implementor,
     String? alias,
   }) async {
     // Verify the folder is a valid java installation
@@ -153,15 +153,15 @@ class JajvmApplicationController {
     // Try to figure out java version
     // - If fails, user inputs java version
 
-    // Try to figure out vendor
-    // - If fails, user inputs required vendor
+    // Try to figure out implementor
+    // - If fails, user inputs required implementor
 
     // User inputs optional nickname, defaults to normalized folder path
 
     return JavaRelease.fromPath(
       path: path,
-      version: version,
-      vendor: vendor,
+      javaVersion: version,
+      implementor: implementor,
       alias: alias,
     );
   }
@@ -198,8 +198,8 @@ class JajvmApplicationController {
     return [];
   }
 
-  /// Install Java version from a supported vendor
-  Future<void> installJavaVersion(String version, String vendor) async {}
+  /// Install Java version from a supported implementor
+  Future<void> installJavaVersion(String version, String implementor) async {}
 
   /// Purge jajvm folder
   ///
