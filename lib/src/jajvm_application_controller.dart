@@ -111,8 +111,9 @@ class JajvmApplicationController {
     // Append default java release bin to system PATH if it is not already
     final path =
         await fileSystemService.readSystemEnvironmentVariable(kPathKey);
-    
-    final hasBinInPath = path != null && path.trim().contains(defaultJavaBinPath);
+
+    final hasBinInPath =
+        path != null && path.trim().contains(defaultJavaBinPath);
     if (!hasBinInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,
@@ -125,7 +126,8 @@ class JajvmApplicationController {
     // Set JAVA_HOME to the default Java release
     final javaHomePath =
         await fileSystemService.readSystemEnvironmentVariable(kJavaHomeKey);
-    final hasJavaInPath = javaHomePath != null && javaHomePath.trim().contains(defaultLinkPath);
+    final hasJavaInPath =
+        javaHomePath != null && javaHomePath.trim().contains(defaultLinkPath);
     if (!hasJavaInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,
@@ -145,6 +147,10 @@ class JajvmApplicationController {
     // Verify the folder is a valid java installation
     // TODO: Figure out how to determine if it is a valid java release
     // final valid = await fileSystemService.verifyJavaInstallation(path);
+
+    // TODO: Get Java installtion info from `java -XshowSettings:properties -version`
+
+    // Try to figure out java version
     // - If fails, user inputs java version
 
     // Try to figure out vendor
