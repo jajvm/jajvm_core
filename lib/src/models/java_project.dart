@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 import 'java_release.dart';
 
+@immutable
 class JavaProject extends Equatable {
   /// The directory of this release
   final Directory directory;
