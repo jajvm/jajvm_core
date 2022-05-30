@@ -9,7 +9,7 @@ import '../constants/error_codes.dart';
 import '../constants/supported_platform.dart';
 import '../exceptions/jajvm_exception.dart';
 
-final _shellProvider = Provider((ref) => Shell());
+final _shellProvider = Provider((ref) => Shell(runInShell: Platform.isWindows));
 
 final _fileSystemProvider = Provider<FileSystemService>((ref) {
   final shell = ref.watch(_shellProvider);
@@ -17,7 +17,9 @@ final _fileSystemProvider = Provider<FileSystemService>((ref) {
 });
 
 class FileSystemService {
-  FileSystemService([Shell? shell]) : _shell = shell ?? Shell();
+  FileSystemService([Shell? shell])
+      : _shell = shell?.clone(runInShell: Platform.isWindows) ??
+            Shell(runInShell: Platform.isWindows);
 
   final Shell _shell;
 
