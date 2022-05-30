@@ -4,7 +4,7 @@
 library jajvm_core;
 
 export 'src/constants/env_vars.dart';
-export 'src/constants/error_codes.dart';
+export 'src/constants/exception_codes.dart';
 export 'src/constants/supported_platform.dart';
 export 'src/exceptions/jajvm_exception.dart';
 export 'src/jajvm_application_controller.dart';

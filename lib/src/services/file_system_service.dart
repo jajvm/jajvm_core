@@ -5,7 +5,7 @@ import 'package:process_run/shell.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../constants/env_vars.dart';
-import '../constants/error_codes.dart';
+import '../constants/exception_codes.dart';
 import '../constants/supported_platform.dart';
 import '../exceptions/jajvm_exception.dart';
 import '../models/java_release.dart';

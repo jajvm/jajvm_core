@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:riverpod/riverpod.dart';
 
 import 'constants/env_vars.dart';
-import 'constants/error_codes.dart';
+import 'constants/exception_codes.dart';
 import 'exceptions/jajvm_exception.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';

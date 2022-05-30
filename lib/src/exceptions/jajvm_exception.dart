@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-import '../constants/error_codes.dart';
+import '../constants/exception_codes.dart';
 
 class JajvmException extends Equatable implements Exception {
   final String message;
