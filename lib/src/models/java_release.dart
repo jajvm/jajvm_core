@@ -12,8 +12,8 @@ class JavaRelease extends Equatable {
   /// The version number of the Java release
   final String? version;
 
-  /// The name of the vender given by the user
-  final String? vender;
+  /// The name of the vendor given by the user
+  final String? vendor;
 
   /// The unique nickname given by the user for this
   final String? alias;
@@ -25,14 +25,14 @@ class JavaRelease extends Equatable {
   factory JavaRelease.fromPath({
     required String path,
     String? version,
-    String? vender,
+    String? vendor,
     String? alias,
     String? id,
   }) =>
       JavaRelease(
         directory: Directory(path),
         version: version,
-        vender: vender,
+        vendor: vendor,
         alias: alias,
         id: id,
       );
@@ -40,7 +40,7 @@ class JavaRelease extends Equatable {
   JavaRelease({
     required this.directory,
     this.version,
-    this.vender,
+    this.vendor,
     this.alias,
     String? id,
   }) {
@@ -50,14 +50,14 @@ class JavaRelease extends Equatable {
   JavaRelease copyWith({
     Directory? directory,
     String? version,
-    String? vender,
+    String? vendor,
     String? alias,
     String? id,
   }) {
     return JavaRelease(
       directory: directory ?? this.directory,
       version: version ?? this.version,
-      vender: vender ?? this.vender,
+      vendor: vendor ?? this.vendor,
       alias: alias ?? this.alias,
       id: id ?? this.id,
     );
@@ -67,7 +67,7 @@ class JavaRelease extends Equatable {
     return {
       'directory': directory.path,
       'version': version,
-      'vender': vender,
+      'vendor': vendor,
       'alias': alias,
       'id': id,
     };
@@ -77,7 +77,7 @@ class JavaRelease extends Equatable {
     return JavaRelease(
       directory: Directory(map['directory']),
       version: map['version'],
-      vender: map['vender'],
+      vendor: map['vendor'],
       alias: map['alias'],
       id: map['id'] ?? '',
     );
@@ -90,7 +90,7 @@ class JavaRelease extends Equatable {
 
   @override
   String toString() {
-    return 'JavaRelease(directory: $directory, version: $version, vender: $vender, alias: $alias, id: $id)';
+    return 'JavaRelease(directory: $directory, version: $version, vendor: $vendor, alias: $alias, id: $id)';
   }
 
   @override
@@ -98,7 +98,7 @@ class JavaRelease extends Equatable {
     return [
       directory,
       version ?? 'no version',
-      vender ?? 'no vender',
+      vendor ?? 'no vendor',
       alias ?? 'no alias',
       id,
     ];

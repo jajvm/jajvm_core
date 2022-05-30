@@ -139,26 +139,23 @@ class JajvmApplicationController {
   Future<JavaRelease> addSystemJavaRelease({
     required String path,
     String? version,
-    String? vender,
+    String? vendor,
     String? alias,
   }) async {
-    // User inputs required path to java folder
-
     // Verify the folder is a valid java installation
     // TODO: Figure out how to determine if it is a valid java release
-
-    // Try to figure out java version
+    // final valid = await fileSystemService.verifyJavaInstallation(path);
     // - If fails, user inputs java version
 
-    // Try to figure out vender
-    // - If fails, user inputs required vender
+    // Try to figure out vendor
+    // - If fails, user inputs required vendor
 
     // User inputs optional nickname, defaults to normalized folder path
 
     return JavaRelease.fromPath(
       path: path,
       version: version,
-      vender: vender,
+      vendor: vendor,
       alias: alias,
     );
   }
@@ -195,8 +192,8 @@ class JajvmApplicationController {
     return [];
   }
 
-  /// Install Java version from a supported vender
-  Future<void> installJavaVersion(String version, String vender) async {}
+  /// Install Java version from a supported vendor
+  Future<void> installJavaVersion(String version, String vendor) async {}
 
   /// Purge jajvm folder
   ///
