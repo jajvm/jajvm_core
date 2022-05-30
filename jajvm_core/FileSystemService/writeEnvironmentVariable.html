@@ -132,13 +132,13 @@
         final previousValue = result.outText.trim();
         if (previousValue.contains(&#39;No such file or directory&#39;)) {
           &#47;&#47; Global environment file not created
-          final result = await _shell.run(&#39;&#39;&#39;
+          final results = await _shell.run(&#39;&#39;&#39;
 ${global ? &#39;sudo &#39; : &#39;&#39;}touch $environmentFilePath
 echo export $key=${shellArgument(value)} &gt;&gt; $environmentFilePath
 source $environmentFilePath
 echo \$$key
 &#39;&#39;&#39;);
-          if (result.outText
+          if (results.outText
               .contains(&#39;export $key=${shellArgument(value)}&#39;)) {
             return;
           }
