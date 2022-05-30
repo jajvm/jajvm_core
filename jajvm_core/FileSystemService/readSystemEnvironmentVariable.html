@@ -78,16 +78,18 @@
           &#39;query&#39;,
           &#39;HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment &#47;v $key&#39;
         ]);
-        if (result.outText.contains(&#39;Invalid parameter(s)&#39;)) {
+        if (result.exitCode == 1 ||
+            result.outText.contains(&#39;Invalid parameter(s)&#39;)) {
           return null;
         }
         return result.outText;
       default:
-        final result = await _shell.run(&#39;cat $kUnixJajvmGlobalEnvPath&#39;);
+        final result = await _shell
+            .runExecutableArguments(&#39;cat&#39;, [kUnixJajvmGlobalEnvPath]);
         final value = result.outText.trim();
-        if (value.contains(&#39;No such file or directory&#39;)) {
-          return null;
-        } else if (!value.contains(&#39;export $key&#39;)) {
+        if (result.exitCode &gt; 0 ||
+            value.contains(&#39;No such file or directory&#39;) ||
+            !value.contains(&#39;export $key&#39;)) {
           return null;
         }
 
