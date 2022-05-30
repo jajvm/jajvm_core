@@ -5,7 +5,9 @@ enum JajvmExceptionCode {
   updateEnvironmentFailed('update-environment-failed'),
   readEnvironmentFailed('read-environment-failed'),
   administratorRequired('administrator-required'),
-  checkAdministratorFailed('check-administrator-failed');
+  checkAdministratorFailed('check-administrator-failed'),
+  readFileFailed('read-file-failed'),
+  copyDirectoryFailed('copy-directory-failed');
 
   final String text;
 
