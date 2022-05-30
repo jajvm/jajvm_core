@@ -378,11 +378,11 @@ echo \$$key
   /// Copy a directory to a new location using shell
   ///
   /// This will override any files that exist in the destination with the same name
-  /// 
+  ///
   /// Arguments:
   /// - `source` full path to the source directory, should include the drive letter
   /// - `destination` full path to the destination directory, should include the drive letter
-  /// 
+  ///
   /// Throws [JajvmException] if the directory could not be copied
   Future<void> copyDirectory(String source, String destination) async {
     try {
@@ -406,14 +406,13 @@ echo \$$key
           final result = await _shell.runExecutableArguments(
               'cp', ['-r', join(source, '*'), destination]);
           // Success exit code is 0: https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html#cp-invocation
-          if (result.exitCode > 0) {
-            throw JajvmException(
-              message:
-                  'Exception: Could not copy directory "$source" to "$destination"',
-              code: JajvmExceptionCode.copyDirectoryFailed,
-            );
-          }
-          break;
+          if (result.exitCode == 0) return;
+
+          throw JajvmException(
+            message:
+                'Exception: Could not copy directory "$source" to "$destination"',
+            code: JajvmExceptionCode.copyDirectoryFailed,
+          );
       }
     } on ShellException catch (e) {
       throw JajvmException(
