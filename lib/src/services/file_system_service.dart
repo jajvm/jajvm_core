@@ -376,10 +376,37 @@ echo \$$key
   }
 
   /// Copy a directory to a new location using shell
+  /// 
+  /// This will override any files that exist in the destination with the same name
   Future<void> copyDirectory(String source, String destination) async {
     try {
-      final result = await _shell
-          .runExecutableArguments('cp', ['-r', source, destination]);
+      switch (kCurrentPlatform) {
+        case JajvmSupportedPlatform.windows:
+          final result = await _shell.runExecutableArguments(
+              'xcopy', [source, destination, '/s', '/e', '/y']);
+          if (result.exitCode == 4) {
+            throw JajvmException(
+              message: 'Exception: Could not copy directory "$source" to "$destination": Initialization error occurred. There is not enough memory or disk space, or you entered an invalid drive name or invalid syntax on the command line.',
+              code: JajvmExceptionCode.copyDirectoryFailed,
+            );
+          } else if(result.exitCode == 5) {
+            throw JajvmException(
+              message: 'Exception: Could not copy directory "$source" to "$destination": Disk write error occurred.',
+              code: JajvmExceptionCode.copyDirectoryFailed,
+            );
+          }
+          break;
+        default:
+          final result = await _shell.runExecutableArguments(
+              'cp', ['-r', join(source, '*'), destination]);
+          if (result.exitCode > 0) {
+            throw JajvmException(
+              message: 'Exception: Could not copy directory "$source" to "$destination"',
+              code: JajvmExceptionCode.copyDirectoryFailed,
+            );
+          }
+          break;
+      }
     } on ShellException catch (e) {
       throw JajvmException(
         message:
@@ -393,9 +420,10 @@ echo \$$key
   Future<void> deleteDirectory(String path) async {
     try {
       await Directory(path).delete(recursive: true);
-    } on FileSystemException catch(e) {
+    } on FileSystemException catch (e) {
       throw JajvmException(
-        message: 'Exception: Could not delete directory "${e.path}": ${e.message}',
+        message:
+            'Exception: Could not delete directory "${e.path}": ${e.message}',
         code: JajvmExceptionCode.deleteDirectoryFailed,
       );
     }
