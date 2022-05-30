@@ -60,7 +60,7 @@ class FileSystemService {
   /// exists at [path], it will be deleted and a new [Link] will be created.
   ///
   /// Throws [JajvmException] if it fails to update the [Link]
-  Link updateSymLink(String path, String target) {
+  Future<Link> updateSymLink(String path, String target) {
     try {
       final type = FileSystemEntity.typeSync(path);
       switch (type) {
@@ -71,7 +71,8 @@ class FileSystemService {
           File(path).deleteSync();
           return createSymLink(path, target);
         case FileSystemEntityType.link:
-          return Link(path)..updateSync(target);
+          final link = Link(path);
+          return link.update(target);
         case FileSystemEntityType.notFound:
           return createSymLink(path, target);
       }
@@ -93,10 +94,18 @@ class FileSystemService {
   /// with code [JajvmExceptionCode.administratorRequired].
   ///
   /// Throws [JajvmException] if it fails to create the symlink.
-  Link createSymLink(String path, String target) {
+  Future<Link> createSymLink(String path, String target) async {
     try {
       final link = Link(path);
       if (link.existsSync()) return link;
+
+      if (Platform.isWindows && !await isAdministratorMode()) {
+        throw JajvmException(
+          message:
+              'Exception: Could not create symlink at "$path" to "$target" because not running with elevated priveleges',
+          code: JajvmExceptionCode.administratorRequired,
+        );
+      }
 
       final type = FileSystemEntity.typeSync(path);
       switch (type) {
@@ -115,14 +124,6 @@ class FileSystemService {
 
       return link..createSync(target, recursive: true);
     } on FileSystemException catch (e) {
-      if (e.osError?.errorCode == 1314) {
-        throw JajvmException(
-          message:
-              'Exception: Could not create symlink at "${e.path}" because not running with elevated priveleges: ${e.message}',
-          code: JajvmExceptionCode.administratorRequired,
-        );
-      }
-
       throw JajvmException(
         message:
             'Exception: Could not create link from "$path" to "$target": ${e.message}',
