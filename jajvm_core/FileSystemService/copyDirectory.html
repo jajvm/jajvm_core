@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the createJajvmFolder method from the FileSystemService class, for the Dart programming language.">
-  <title>createJajvmFolder method - FileSystemService class - jajvm_core library - Dart API</title>
+  <meta name="description" content="API docs for the copyDirectory method from the FileSystemService class, for the Dart programming language.">
+  <title>copyDirectory method - FileSystemService class - jajvm_core library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
-    <li class="self-crumb">createJajvmFolder method</li>
+    <li class="self-crumb">copyDirectory method</li>
   </ol>
-  <div class="self-name">createJajvmFolder</div>
+  <div class="self-name">copyDirectory</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,7 +45,7 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">createJajvmFolder</span> method 
+<h1><span class="kind-method">copyDirectory</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
@@ -53,24 +53,59 @@
       
 
 <span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
-<span class="name ">createJajvmFolder</span>(<wbr>)
+<span class="name ">copyDirectory</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="copyDirectory-param-source"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">source</span>, </span></li>
+<li><span class="parameter" id="copyDirectory-param-destination"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">destination</span></span></li>
+</ol>)
 
       
 
     </section>
     
 <section class="desc markdown">
-  <p>Creates the jajvm folder at the directory defined by the
-environment variable <code>JAJVM_HOME</code>. If <code>JAJVM_HOME</code> is not
-defined, it defaults to <code>kUserHome</code><code>/jajvm</code>.</p>
+  <p>Copy a directory to a new location using shell</p>
+<p>This will override any files that exist in the destination with the same name</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; createJajvmFolder() async {
-  createFolder(await envJajvmHome);
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; copyDirectory(String source, String destination) async {
+  try {
+    switch (kCurrentPlatform) {
+      case JajvmSupportedPlatform.windows:
+        final result = await _shell.runExecutableArguments(
+            &#39;xcopy&#39;, [source, destination, &#39;&#47;s&#39;, &#39;&#47;e&#39;, &#39;&#47;y&#39;]);
+        &#47;&#47; Failure exit codes are 4 and 5: https:&#47;&#47;docs.microsoft.com&#47;en-us&#47;windows-server&#47;administration&#47;windows-commands&#47;xcopy
+        if (result.exitCode &lt;= 3 || result.exitCode &gt; 5) return;
+
+        final message = result.exitCode == 4
+            ? &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: Initialization error occurred. There is not enough memory or disk space, or you entered an invalid drive name or invalid syntax on the command line.&#39;
+            : &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: Disk write error occurred.&#39;;
+
+        throw JajvmException(
+          message: message,
+          code: JajvmExceptionCode.copyDirectoryFailed,
+        );
+      default:
+        final result = await _shell.runExecutableArguments(
+            &#39;cp&#39;, [&#39;-r&#39;, join(source, &#39;*&#39;), destination]);
+        if (result.exitCode &gt; 0) {
+          throw JajvmException(
+            message:
+                &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;&#39;,
+            code: JajvmExceptionCode.copyDirectoryFailed,
+          );
+        }
+        break;
+    }
+  } on ShellException catch (e) {
+    throw JajvmException(
+      message:
+          &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: ${e.message}&#39;,
+      code: JajvmExceptionCode.copyDirectoryFailed,
+    );
+  }
 }</code></pre>
 </section>
 
@@ -88,7 +123,7 @@ defined, it defaults to <code>kUserHome</code><code>/jajvm</code>.</p>
   <li><a href="../../index.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
-  <li class="self-crumb">createJajvmFolder method</li>
+  <li class="self-crumb">copyDirectory method</li>
 </ol>
 
 

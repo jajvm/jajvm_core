@@ -62,6 +62,7 @@
 <section class="desc markdown">
   <p>Purge jajvm folder</p>
 <p>This deletes all saved java releases and symlinks</p>
+<p>TODO: Remove from path and JAVA_HOME</p>
 </section>
 
 
@@ -70,8 +71,14 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; purge() async {
   &#47;&#47; Delete `~&#47;jajvm` folder recursively
+  await fileSystemService
+      .deleteDirectory(await fileSystemService.envJajvmHome);
 
   &#47;&#47; Clear JAVA_HOME and remove itself from PATH
+  &#47;&#47; await fileSystemService.removeEnvironmentVariable(
+  &#47;&#47;   kJavaHomeKey,
+  &#47;&#47;   global: true,
+  &#47;&#47; );
 }</code></pre>
 </section>
 

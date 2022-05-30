@@ -66,8 +66,10 @@
 <p>Arguments:</p>
 <ul>
 <li><code>path</code> full path to the java release directory</li>
-<li><code>alias</code> must be unique</li>
+<li><code>alias</code> should be unique. Any <code>/</code> or <code>\</code> characters will be removed, and spaces replaced with <code>_</code></li>
 </ul>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if it fails to read or <code>release</code> file in the directory
+or if it fails to copy the directory to the jajvm <code>versions</code> folder</p>
 </section>
 
 
@@ -78,21 +80,39 @@
   required String path,
   String? alias,
 }) async {
-  &#47;&#47; Verify the folder is a valid java installation
-  &#47;&#47; TODO: Figure out how to determine if it is a valid java release
-  &#47;&#47; final valid = await fileSystemService.verifyJavaInstallation(path);
+  &#47;&#47; Get Java release info from `$path&#47;release` file
+  final javaRelease = await fileSystemService.parseJavaReleaseDetails(path);
 
-  &#47;&#47; TODO: Get Java installtion info from `java -XshowSettings:properties -version` or parse `$path&#47;release` file
-  &#47;&#47; final javaRelease = await fileSystemService.parseJavaReleaseDetails(path, alias);
+  &#47;&#47; Parse a unique alias from the release details.
+  String? getParsedAlias(JavaRelease javaRelease) {
+    if (javaRelease.implementor != null ||
+        javaRelease.implementorVersion != null ||
+        javaRelease.javaVersionDate != null) {
+      final releaseInfo = (javaRelease.implementor ?? &#39;&#39;) +
+          (javaRelease.implementorVersion ?? &#39;&#39;) +
+          (javaRelease.javaVersionDate ?? &#39;&#39;);
+      return releaseInfo.isEmpty ? null : releaseInfo + javaRelease.uid;
+    } else {
+      return null;
+    }
+  }
 
-  &#47;&#47; User inputs optional alias, defaults to normalized folder path
-  &#47;&#47; return javaRelease;
+  &#47;&#47; Choose a user friendly alias if one is not provided
+  final cleanedAlias = ((alias == null || alias.isEmpty)
+          ? getParsedAlias(javaRelease) ?? p.normalize(path)
+          : alias)
+      .replaceAll(RegExp(r&#39;[&#47;\\]&#39;), &#39;&#39;)
+      .replaceAll(&#39; &#39;, &#39;_&#39;);
 
-  return JavaRelease.fromPath(
-    path: path,
-    &#47;&#47; javaVersion: version,
-    &#47;&#47; implementor: implementor,
-    alias: alias,
+  &#47;&#47; Determine new path to copy folder to
+  final versionsPath = await fileSystemService.envJajvmVersionDirectory;
+  final destination = p.join(versionsPath, cleanedAlias);
+
+  &#47;&#47; Copy folder to new path
+  await fileSystemService.copyDirectory(path, destination);
+  return javaRelease.copyWith(
+    alias: cleanedAlias,
+    directory: io.Directory(destination),
   );
 }</code></pre>
 </section>

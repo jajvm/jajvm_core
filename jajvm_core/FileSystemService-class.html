@@ -118,6 +118,19 @@
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
+        <dt id="copyDirectory" class="callable">
+  <span class="name"><a href="../jajvm_core/FileSystemService/copyDirectory.html">copyDirectory</a></span><span class="signature">(<wbr><span class="parameter" id="copyDirectory-param-source"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">source</span>, </span><span class="parameter" id="copyDirectory-param-destination"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">destination</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Copy a directory to a new location using shell
+  
+
+</dd>
+
         <dt id="createFolder" class="callable">
   <span class="name"><a href="../jajvm_core/FileSystemService/createFolder.html">createFolder</a></span><span class="signature">(<wbr><span class="parameter" id="createFolder-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span></span>)
     <span class="returntype parameter">&#8594; void</span>
@@ -175,6 +188,19 @@ with code <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.adm
 
 </dd>
 
+        <dt id="deleteDirectory" class="callable">
+  <span class="name"><a href="../jajvm_core/FileSystemService/deleteDirectory.html">deleteDirectory</a></span><span class="signature">(<wbr><span class="parameter" id="deleteDirectory-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Delete a directory
+  
+
+</dd>
+
         <dt id="isAdministratorMode" class="callable">
   <span class="name"><a href="../jajvm_core/FileSystemService/isAdministratorMode.html">isAdministratorMode</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
@@ -198,6 +224,19 @@ with code <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.adm
 <dd class="inherited">
   Invoked when a non-existent method or property is accessed.
   <div class="features">inherited</div>
+
+</dd>
+
+        <dt id="parseJavaReleaseDetails" class="callable">
+  <span class="name"><a href="../jajvm_core/FileSystemService/parseJavaReleaseDetails.html">parseJavaReleaseDetails</a></span><span class="signature">(<wbr><span class="parameter" id="parseJavaReleaseDetails-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Parsers the java release file
+  
 
 </dd>
 
@@ -380,12 +419,15 @@ exists at <code>path</code>, it will be deleted and a new <a href="https://api.d
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
     <li class="section-title"><a href="../jajvm_core/FileSystemService-class.html#instance-methods">Methods</a></li>
+    <li><a href="../jajvm_core/FileSystemService/copyDirectory.html">copyDirectory</a></li>
     <li><a href="../jajvm_core/FileSystemService/createFolder.html">createFolder</a></li>
     <li><a href="../jajvm_core/FileSystemService/createJajvmFolder.html">createJajvmFolder</a></li>
     <li><a href="../jajvm_core/FileSystemService/createSymLink.html">createSymLink</a></li>
     <li><a href="../jajvm_core/FileSystemService/createVersionsFolder.html">createVersionsFolder</a></li>
+    <li><a href="../jajvm_core/FileSystemService/deleteDirectory.html">deleteDirectory</a></li>
     <li><a href="../jajvm_core/FileSystemService/isAdministratorMode.html">isAdministratorMode</a></li>
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../jajvm_core/FileSystemService/parseJavaReleaseDetails.html">parseJavaReleaseDetails</a></li>
     <li><a href="../jajvm_core/FileSystemService/readEnvironmentVariable.html">readEnvironmentVariable</a></li>
     <li><a href="../jajvm_core/FileSystemService/readSystemEnvironmentVariable.html">readSystemEnvironmentVariable</a></li>
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/toString.html">toString</a></li>
