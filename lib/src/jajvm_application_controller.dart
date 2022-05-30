@@ -71,7 +71,7 @@ class JajvmApplicationController {
     final currentJavaHome = await fileSystemService.envJavaHomeDirectory;
     if (currentJavaHome == null) return;
 
-    final JavaRelease javaRelease = await copySystemJavaRelease(
+    final JavaRelease javaRelease = await addSystemJavaRelease(
       path: currentJavaHome.path,
       alias: 'SystemJavaHome', // TODO: Use better name by parsing path for info
     );
@@ -135,8 +135,8 @@ class JajvmApplicationController {
     }
   }
 
-  /// Copy java release on system to jajvm's version directory
-  Future<JavaRelease> copySystemJavaRelease({
+  /// Copies a java release on the file system to jajvm's version directory
+  Future<JavaRelease> addSystemJavaRelease({
     required String path,
     String? version,
     String? vender,
