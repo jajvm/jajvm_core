@@ -148,7 +148,7 @@ class JajvmApplicationController {
     // TODO: Figure out how to determine if it is a valid java release
     // final valid = await fileSystemService.verifyJavaInstallation(path);
 
-    // TODO: Get Java installtion info from `java -XshowSettings:properties -version`
+    // TODO: Get Java installtion info from `java -XshowSettings:properties -version` or parse `$path/release` file
 
     // Try to figure out java version
     // - If fails, user inputs java version
