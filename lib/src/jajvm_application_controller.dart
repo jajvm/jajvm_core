@@ -140,8 +140,6 @@ class JajvmApplicationController {
   /// Copies a java release on the file system to jajvm's version directory
   Future<JavaRelease> addSystemJavaRelease({
     required String path,
-    String? version,
-    String? implementor,
     String? alias,
   }) async {
     // Verify the folder is a valid java installation
@@ -149,19 +147,15 @@ class JajvmApplicationController {
     // final valid = await fileSystemService.verifyJavaInstallation(path);
 
     // TODO: Get Java installtion info from `java -XshowSettings:properties -version` or parse `$path/release` file
+    // final javaRelease = await fileSystemService.parseJavaReleaseDetails(path, alias);
 
-    // Try to figure out java version
-    // - If fails, user inputs java version
-
-    // Try to figure out implementor
-    // - If fails, user inputs required implementor
-
-    // User inputs optional nickname, defaults to normalized folder path
+    // User inputs optional alias, defaults to normalized folder path
+    // return javaRelease;
 
     return JavaRelease.fromPath(
       path: path,
-      javaVersion: version,
-      implementor: implementor,
+      // javaVersion: version,
+      // implementor: implementor,
       alias: alias,
     );
   }
