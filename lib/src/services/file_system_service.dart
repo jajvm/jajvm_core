@@ -139,7 +139,7 @@ class FileSystemService {
       switch (kCurrentPlatform) {
         case JajvmSupportedPlatform.windows:
           final result =
-              await _shell.runExecutableArguments('set', ['session']);
+              await _shell.runExecutableArguments('net', ['session']);
           return !result.outText.contains('Access is denied.');
         default:
           final result = await _shell.run('whoami');
