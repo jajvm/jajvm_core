@@ -55,7 +55,7 @@
 <span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
 <span class="name ">addSystemJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addSystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span></li>
 <li><span class="parameter" id="addSystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span></li>
-<li><span class="parameter" id="addSystemJavaRelease-param-vendor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">vendor</span>, </span></li>
+<li><span class="parameter" id="addSystemJavaRelease-param-implementor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">implementor</span>, </span></li>
 <li><span class="parameter" id="addSystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span></li>
 </ol>)
 
@@ -74,7 +74,7 @@
   <pre class="language-dart"><code class="language-dart">Future&lt;JavaRelease&gt; addSystemJavaRelease({
   required String path,
   String? version,
-  String? vendor,
+  String? implementor,
   String? alias,
 }) async {
   &#47;&#47; Verify the folder is a valid java installation
@@ -86,15 +86,15 @@
   &#47;&#47; Try to figure out java version
   &#47;&#47; - If fails, user inputs java version
 
-  &#47;&#47; Try to figure out vendor
-  &#47;&#47; - If fails, user inputs required vendor
+  &#47;&#47; Try to figure out implementor
+  &#47;&#47; - If fails, user inputs required implementor
 
   &#47;&#47; User inputs optional nickname, defaults to normalized folder path
 
   return JavaRelease.fromPath(
     path: path,
-    version: version,
-    vendor: vendor,
+    javaVersion: version,
+    implementor: implementor,
     alias: alias,
   );
 }</code></pre>
