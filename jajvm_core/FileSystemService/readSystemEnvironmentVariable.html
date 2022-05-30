@@ -52,7 +52,7 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span>&gt;</span></span>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span>&gt;</span></span>
 <span class="name ">readSystemEnvironmentVariable</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="readSystemEnvironmentVariable-param-key"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span></span></li>
 </ol>)
 
@@ -62,7 +62,7 @@
     
 <section class="desc markdown">
   <p>Read only windows system environment variables.</p>
-<p>Throws <a href="https://api.dart.dev/stable/2.17.1/dart-core/UnimplementedError-class.html">UnimplementedError</a> if not on windows.</p>
+<p>Returns null if the environment variable is not set.</p>
 <p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if it fails to read the environment variable.</p>
 </section>
 
@@ -70,15 +70,44 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;String&gt; readSystemEnvironmentVariable(String key) async {
-  if (!Platform.isWindows) throw UnimplementedError();
-
+  <pre class="language-dart"><code class="language-dart">Future&lt;String?&gt; readSystemEnvironmentVariable(String key) async {
   try {
-    final result = await _shell.runExecutableArguments(&#39;reg&#39;, [
-      &#39;query&#39;,
-      &#39;HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment &#47;v $key&#39;
-    ]);
-    return result.outText;
+    switch (kCurrentPlatform) {
+      case JajvmSupportedPlatform.windows:
+        final result = await _shell.runExecutableArguments(&#39;reg&#39;, [
+          &#39;query&#39;,
+          &#39;HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment &#47;v $key&#39;
+        ]);
+        if (result.outText.contains(&#39;Invalid parameter(s)&#39;)) {
+          return null;
+        }
+        return result.outText;
+      default:
+        final result = await _shell.run(&#39;cat $kUnixJajvmGlobalEnvPath&#39;);
+        final value = result.outText.trim();
+        if (value.contains(&#39;No such file or directory&#39;)) {
+          return null;
+        } else if (!value.contains(&#39;export $key&#39;)) {
+          return null;
+        }
+
+        &#47;&#47; Return the part after the equals sign
+        return result.outLines
+            .firstWhere((line) =&gt;
+                line.trim().startsWith(&#39;export&#39;) &amp;&amp;
+                line
+                    .trim()
+                    .replaceFirst(&#39;export&#39;, &#39;&#39;)
+                    .trim()
+                    .startsWith(key) &amp;&amp;
+                line.trim().replaceFirst(key, &#39;&#39;).trim().startsWith(&#39;=&#39;))
+            .replaceFirst(&#39;export&#39;, &#39;&#39;)
+            .trimLeft()
+            .replaceFirst(key, &#39;&#39;)
+            .trimLeft()
+            .replaceFirst(&#39;=&#39;, &#39;&#39;)
+            .trim();
+    }
   } on ShellException catch (e) {
     throw JajvmException(
       message:

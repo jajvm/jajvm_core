@@ -126,6 +126,19 @@
 
 </dd>
 
+        <dt id="addSystemJavaRelease" class="callable">
+  <span class="name"><a href="../jajvm_core/JajvmApplicationController/addSystemJavaRelease.html">addSystemJavaRelease</a></span><span class="signature">(<wbr><span class="parameter" id="addSystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span><span class="parameter" id="addSystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span><span class="parameter" id="addSystemJavaRelease-param-vendor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">vendor</span>, </span><span class="parameter" id="addSystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Copies a java release on the file system to jajvm's version directory
+  
+
+</dd>
+
         <dt id="changeTerminalSessionJavaRelease" class="callable">
   <span class="name"><a href="../jajvm_core/JajvmApplicationController/changeTerminalSessionJavaRelease.html">changeTerminalSessionJavaRelease</a></span><span class="signature">(<wbr><span class="parameter" id="changeTerminalSessionJavaRelease-param-release"><span class="type-annotation"><a href="../jajvm_core/JavaRelease-class.html">JavaRelease</a></span> <span class="parameter-name">release</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
@@ -135,19 +148,6 @@
 </dt>
 <dd>
   Change terminal session's java release
-  
-
-</dd>
-
-        <dt id="copySystemJavaRelease" class="callable">
-  <span class="name"><a href="../jajvm_core/JajvmApplicationController/copySystemJavaRelease.html">copySystemJavaRelease</a></span><span class="signature">(<wbr><span class="parameter" id="copySystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span><span class="parameter" id="copySystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span><span class="parameter" id="copySystemJavaRelease-param-vender"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">vender</span>, </span><span class="parameter" id="copySystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
-  </span>
-  
-
-</dt>
-<dd>
-  Copy java release on system to jajvm's version directory
   
 
 </dd>
@@ -194,14 +194,14 @@ already installed after copying it to the jajvm <code>versions</code> folder.
 </dd>
 
         <dt id="installJavaVersion" class="callable">
-  <span class="name"><a href="../jajvm_core/JajvmApplicationController/installJavaVersion.html">installJavaVersion</a></span><span class="signature">(<wbr><span class="parameter" id="installJavaVersion-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">version</span>, </span><span class="parameter" id="installJavaVersion-param-vender"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">vender</span></span>)
+  <span class="name"><a href="../jajvm_core/JajvmApplicationController/installJavaVersion.html">installJavaVersion</a></span><span class="signature">(<wbr><span class="parameter" id="installJavaVersion-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">version</span>, </span><span class="parameter" id="installJavaVersion-param-vendor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">vendor</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
-  Install Java version from a supported vender
+  Install Java version from a supported vendor
   
 
 </dd>
@@ -412,12 +412,12 @@ already installed after copying it to the jajvm <code>versions</code> folder.
 
   <li class="section-title"><a href="../jajvm_core/jajvm_core-library.html#constants">Constants</a></li>
   <li><a href="../jajvm_core/kBinFolderName-constant.html">kBinFolderName</a></li>
-  <li><a href="../jajvm_core/kDefaultFolderName-constant.html">kDefaultFolderName</a></li>
+  <li><a href="../jajvm_core/kJajvmDefaultSymLinkName-constant.html">kJajvmDefaultSymLinkName</a></li>
   <li><a href="../jajvm_core/kJajvmHomeKey-constant.html">kJajvmHomeKey</a></li>
   <li><a href="../jajvm_core/kJavaHomeKey-constant.html">kJavaHomeKey</a></li>
-  <li><a href="../jajvm_core/kLinuxJajvmGlobalEnvPath-constant.html">kLinuxJajvmGlobalEnvPath</a></li>
-  <li><a href="../jajvm_core/kLinuxJajvmUserEnvPath-constant.html">kLinuxJajvmUserEnvPath</a></li>
   <li><a href="../jajvm_core/kPathKey-constant.html">kPathKey</a></li>
+  <li><a href="../jajvm_core/kUnixJajvmGlobalEnvPath-constant.html">kUnixJajvmGlobalEnvPath</a></li>
+  <li><a href="../jajvm_core/kUnixJajvmUserEnvPath-constant.html">kUnixJajvmUserEnvPath</a></li>
 
   <li class="section-title"><a href="../jajvm_core/jajvm_core-library.html#properties">Properties</a></li>
   <li><a href="../jajvm_core/kCurrentPlatform.html">kCurrentPlatform</a></li>
@@ -451,8 +451,8 @@ already installed after copying it to the jajvm <code>versions</code> folder.
 
     <li class="section-title"><a href="../jajvm_core/JajvmApplicationController-class.html#instance-methods">Methods</a></li>
     <li><a href="../jajvm_core/JajvmApplicationController/addProject.html">addProject</a></li>
+    <li><a href="../jajvm_core/JajvmApplicationController/addSystemJavaRelease.html">addSystemJavaRelease</a></li>
     <li><a href="../jajvm_core/JajvmApplicationController/changeTerminalSessionJavaRelease.html">changeTerminalSessionJavaRelease</a></li>
-    <li><a href="../jajvm_core/JajvmApplicationController/copySystemJavaRelease.html">copySystemJavaRelease</a></li>
     <li><a href="../jajvm_core/JajvmApplicationController/deleteJavaRelease.html">deleteJavaRelease</a></li>
     <li><a href="../jajvm_core/JajvmApplicationController/findProjects.html">findProjects</a></li>
     <li><a href="../jajvm_core/JajvmApplicationController/initialize.html">initialize</a></li>

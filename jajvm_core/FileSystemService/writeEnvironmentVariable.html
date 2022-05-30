@@ -64,7 +64,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Write an environment variable to the system. Only works on windows.</p>
+  <p>Write an environment variable to the system</p>
 <p>Arguments:</p>
 <ul>
 <li><code>key</code> must not have spaces</li>
@@ -126,7 +126,7 @@
         );
       default:
         final environmentFilePath =
-            global ? kLinuxJajvmGlobalEnvPath : kLinuxJajvmUserEnvPath;
+            global ? kUnixJajvmGlobalEnvPath : kUnixJajvmUserEnvPath;
 
         final result = await _shell.run(&#39;cat $environmentFilePath&#39;);
         final previousValue = result.outText.trim();

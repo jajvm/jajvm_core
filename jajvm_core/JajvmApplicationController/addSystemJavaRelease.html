@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the copySystemJavaRelease method from the JajvmApplicationController class, for the Dart programming language.">
-  <title>copySystemJavaRelease method - JajvmApplicationController class - jajvm_core library - Dart API</title>
+  <meta name="description" content="API docs for the addSystemJavaRelease method from the JajvmApplicationController class, for the Dart programming language.">
+  <title>addSystemJavaRelease method - JajvmApplicationController class - jajvm_core library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
-    <li class="self-crumb">copySystemJavaRelease method</li>
+    <li class="self-crumb">addSystemJavaRelease method</li>
   </ol>
-  <div class="self-name">copySystemJavaRelease</div>
+  <div class="self-name">addSystemJavaRelease</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,7 +45,7 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">copySystemJavaRelease</span> method 
+<h1><span class="kind-method">addSystemJavaRelease</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
@@ -53,10 +53,10 @@
       
 
 <span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
-<span class="name ">copySystemJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="copySystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span></li>
-<li><span class="parameter" id="copySystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span></li>
-<li><span class="parameter" id="copySystemJavaRelease-param-vender"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">vender</span>, </span></li>
-<li><span class="parameter" id="copySystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span></li>
+<span class="name ">addSystemJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addSystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span></li>
+<li><span class="parameter" id="addSystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span></li>
+<li><span class="parameter" id="addSystemJavaRelease-param-vendor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">vendor</span>, </span></li>
+<li><span class="parameter" id="addSystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span></li>
 </ol>)
 
       
@@ -64,36 +64,37 @@
     </section>
     
 <section class="desc markdown">
-  <p>Copy java release on system to jajvm's version directory</p>
+  <p>Copies a java release on the file system to jajvm's version directory</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;JavaRelease&gt; copySystemJavaRelease({
+  <pre class="language-dart"><code class="language-dart">Future&lt;JavaRelease&gt; addSystemJavaRelease({
   required String path,
   String? version,
-  String? vender,
+  String? vendor,
   String? alias,
 }) async {
-  &#47;&#47; User inputs required path to java folder
-
   &#47;&#47; Verify the folder is a valid java installation
   &#47;&#47; TODO: Figure out how to determine if it is a valid java release
+  &#47;&#47; final valid = await fileSystemService.verifyJavaInstallation(path);
+
+  &#47;&#47; TODO: Get Java installtion info from `java -XshowSettings:properties -version`
 
   &#47;&#47; Try to figure out java version
   &#47;&#47; - If fails, user inputs java version
 
-  &#47;&#47; Try to figure out vender
-  &#47;&#47; - If fails, user inputs required vender
+  &#47;&#47; Try to figure out vendor
+  &#47;&#47; - If fails, user inputs required vendor
 
   &#47;&#47; User inputs optional nickname, defaults to normalized folder path
 
   return JavaRelease.fromPath(
     path: path,
     version: version,
-    vender: vender,
+    vendor: vendor,
     alias: alias,
   );
 }</code></pre>
@@ -113,7 +114,7 @@
   <li><a href="../../index.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
-  <li class="self-crumb">copySystemJavaRelease method</li>
+  <li class="self-crumb">addSystemJavaRelease method</li>
 </ol>
 
 
@@ -133,8 +134,8 @@
 
     <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#instance-methods">Methods</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/addProject.html">addProject</a></li>
+    <li><a href="../../jajvm_core/JajvmApplicationController/addSystemJavaRelease.html">addSystemJavaRelease</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/changeTerminalSessionJavaRelease.html">changeTerminalSessionJavaRelease</a></li>
-    <li><a href="../../jajvm_core/JajvmApplicationController/copySystemJavaRelease.html">copySystemJavaRelease</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/deleteJavaRelease.html">deleteJavaRelease</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/findProjects.html">findProjects</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/initialize.html">initialize</a></li>
