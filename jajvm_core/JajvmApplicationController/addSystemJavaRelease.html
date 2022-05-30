@@ -54,8 +54,6 @@
 
 <span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>
 <span class="name ">addSystemJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addSystemJavaRelease-param-path">{<span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span></li>
-<li><span class="parameter" id="addSystemJavaRelease-param-version"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">version</span>, </span></li>
-<li><span class="parameter" id="addSystemJavaRelease-param-implementor"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">implementor</span>, </span></li>
 <li><span class="parameter" id="addSystemJavaRelease-param-alias"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">alias</span>}</span></li>
 </ol>)
 
@@ -73,8 +71,6 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;JavaRelease&gt; addSystemJavaRelease({
   required String path,
-  String? version,
-  String? implementor,
   String? alias,
 }) async {
   &#47;&#47; Verify the folder is a valid java installation
@@ -82,19 +78,15 @@
   &#47;&#47; final valid = await fileSystemService.verifyJavaInstallation(path);
 
   &#47;&#47; TODO: Get Java installtion info from `java -XshowSettings:properties -version` or parse `$path&#47;release` file
+  &#47;&#47; final javaRelease = await fileSystemService.parseJavaReleaseDetails(path, alias);
 
-  &#47;&#47; Try to figure out java version
-  &#47;&#47; - If fails, user inputs java version
-
-  &#47;&#47; Try to figure out implementor
-  &#47;&#47; - If fails, user inputs required implementor
-
-  &#47;&#47; User inputs optional nickname, defaults to normalized folder path
+  &#47;&#47; User inputs optional alias, defaults to normalized folder path
+  &#47;&#47; return javaRelease;
 
   return JavaRelease.fromPath(
     path: path,
-    javaVersion: version,
-    implementor: implementor,
+    &#47;&#47; javaVersion: version,
+    &#47;&#47; implementor: implementor,
     alias: alias,
   );
 }</code></pre>
