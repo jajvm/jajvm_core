@@ -76,7 +76,7 @@
             await _shell.runExecutableArguments(&#39;net&#39;, [&#39;session&#39;]);
         return !result.outText.contains(&#39;Access is denied.&#39;);
       default:
-        final result = await _shell.run(&#39;whoami&#39;);
+        final result = await _shell.runExecutableArguments(&#39;whoami&#39;, []);
         return result.outText.contains(&#39;root&#39;);
     }
   } on ShellException catch (e) {
