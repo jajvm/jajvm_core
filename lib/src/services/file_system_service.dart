@@ -197,16 +197,18 @@ class FileSystemService {
             'query',
             'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment /v $key'
           ]);
-          if (result.exitCode == 1 || result.outText.contains('Invalid parameter(s)')) {
+          if (result.exitCode == 1 ||
+              result.outText.contains('Invalid parameter(s)')) {
             return null;
           }
           return result.outText;
         default:
-          final result = await _shell.run('cat $kUnixJajvmGlobalEnvPath');
+          final result = await _shell
+              .runExecutableArguments('cat', [kUnixJajvmGlobalEnvPath]);
           final value = result.outText.trim();
-          if (value.contains('No such file or directory')) {
-            return null;
-          } else if (!value.contains('export $key')) {
+          if (result.exitCode > 0 ||
+              value.contains('No such file or directory') ||
+              !value.contains('export $key')) {
             return null;
           }
 
