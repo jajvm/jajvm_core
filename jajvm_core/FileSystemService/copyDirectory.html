@@ -74,6 +74,7 @@
   try {
     switch (kCurrentPlatform) {
       case JajvmSupportedPlatform.windows:
+        &#47;&#47; Will override any files that exist in the destination with the same name
         final result = await _shell.runExecutableArguments(
             &#39;xcopy&#39;, [source, destination, &#39;&#47;s&#39;, &#39;&#47;e&#39;, &#39;&#47;y&#39;]);
         &#47;&#47; Failure exit codes are 4 and 5: https:&#47;&#47;docs.microsoft.com&#47;en-us&#47;windows-server&#47;administration&#47;windows-commands&#47;xcopy
@@ -90,6 +91,7 @@
       default:
         final result = await _shell.runExecutableArguments(
             &#39;cp&#39;, [&#39;-r&#39;, join(source, &#39;*&#39;), destination]);
+        &#47;&#47; Success exit code is 0: https:&#47;&#47;www.gnu.org&#47;software&#47;coreutils&#47;manual&#47;html_node&#47;cp-invocation.html#cp-invocation
         if (result.exitCode &gt; 0) {
           throw JajvmException(
             message:
