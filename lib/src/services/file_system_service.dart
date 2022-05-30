@@ -382,6 +382,7 @@ echo \$$key
     try {
       switch (kCurrentPlatform) {
         case JajvmSupportedPlatform.windows:
+          // Will override any files that exist in the destination with the same name
           final result = await _shell.runExecutableArguments(
               'xcopy', [source, destination, '/s', '/e', '/y']);
           // Failure exit codes are 4 and 5: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/xcopy
@@ -398,6 +399,7 @@ echo \$$key
         default:
           final result = await _shell.runExecutableArguments(
               'cp', ['-r', join(source, '*'), destination]);
+          // Success exit code is 0: https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html#cp-invocation
           if (result.exitCode > 0) {
             throw JajvmException(
               message:
