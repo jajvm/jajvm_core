@@ -294,13 +294,13 @@ class FileSystemService {
           final previousValue = result.outText.trim();
           if (previousValue.contains('No such file or directory')) {
             // Global environment file not created
-            final result = await _shell.run('''
+            final results = await _shell.run('''
 ${global ? 'sudo ' : ''}touch $environmentFilePath
 echo export $key=${shellArgument(value)} >> $environmentFilePath
 source $environmentFilePath
 echo \$$key
 ''');
-            if (result.outText
+            if (results.outText
                 .contains('export $key=${shellArgument(value)}')) {
               return;
             }
