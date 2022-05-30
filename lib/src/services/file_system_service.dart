@@ -388,7 +388,7 @@ extension EnvironmentReader on FileSystemService {
   }
 
   Future<String> get envDefaultLinkPath async =>
-      join(await envJajvmHome, kDefaultFolderName);
+      join(await envJajvmHome, kJajvmDefaultSymLinkName);
 
   Future<String> get envDefaultJavaBinPath async =>
       join(await envDefaultLinkPath, kBinFolderName);
