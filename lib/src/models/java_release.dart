@@ -20,6 +20,8 @@ class JavaRelease extends Equatable {
   /// Parsed from the java `release` file
   final String? javaVersionDate;
 
+  final String? libc;
+
   /// Parsed from the java `release` file
   final String? implementor;
 
@@ -31,6 +33,14 @@ class JavaRelease extends Equatable {
   final String? osArchitecture;
 
   final String? osName;
+
+  final String? source;
+
+  final String? buildSource;
+
+  final String? buildSourceRepo;
+
+  final String? sourceRepo;
 
   final String? fullVersion;
 
@@ -50,26 +60,31 @@ class JavaRelease extends Equatable {
 
   JavaRelease({
     required this.directory,
-    required this.javaVersionDate,
-    required this.implementorVersion,
-    required this.modules,
-    required this.osArchitecture,
-    required this.osName,
-    required this.fullVersion,
-    required this.semanticVersion,
-    required this.buildInfo,
-    required this.jvmVariant,
-    required this.jvmVersion,
-    required this.imageType,
-    required this.javaVersion,
-    required this.implementor,
-    required this.alias,
-    required String? uid,
+    this.javaVersionDate,
+    this.implementorVersion,
+    this.modules,
+    this.osArchitecture,
+    this.osName,
+    this.fullVersion,
+    this.semanticVersion,
+    this.buildInfo,
+    this.jvmVariant,
+    this.jvmVersion,
+    this.imageType,
+    this.javaVersion,
+    this.libc,
+    this.implementor,
+    this.alias,
+    this.source,
+    this.buildSource,
+    this.buildSourceRepo,
+    this.sourceRepo,
+    String? uid,
   }) {
     this.uid = uid ?? _uuid.v4();
   }
 
-  factory JavaRelease.fromPath({
+  factory JavaRelease.byPath({
     required String path,
     String? javaVersionDate,
     String? javaVersion,
@@ -86,6 +101,11 @@ class JavaRelease extends Equatable {
     String? imageType,
     String? alias,
     String? uid,
+    String? libc,
+    String? source,
+    String? buildSource,
+    String? buildSourceRepo,
+    String? sourceRepo,
   }) =>
       JavaRelease(
         directory: Directory(path),
@@ -104,6 +124,11 @@ class JavaRelease extends Equatable {
         osArchitecture: osArchitecture,
         osName: osName,
         semanticVersion: semanticVersion,
+        libc: libc,
+        source: source,
+        buildSource: buildSource,
+        buildSourceRepo: buildSourceRepo,
+        sourceRepo: sourceRepo,
       );
 
   JavaRelease copyWith({
@@ -123,6 +148,11 @@ class JavaRelease extends Equatable {
     String? jvmVersion,
     String? imageType,
     String? uid,
+    String? libc,
+    String? source,
+    String? buildSource,
+    String? buildSourceRepo,
+    String? sourceRepo,
   }) {
     return JavaRelease(
       directory: directory ?? this.directory,
@@ -141,6 +171,11 @@ class JavaRelease extends Equatable {
       jvmVersion: jvmVersion ?? this.jvmVersion,
       imageType: imageType ?? this.imageType,
       uid: uid ?? this.uid,
+      libc: libc ?? this.libc,
+      source: source ?? this.source,
+      buildSource: buildSource ?? this.buildSource,
+      buildSourceRepo: buildSourceRepo ?? this.buildSourceRepo,
+      sourceRepo: sourceRepo ?? this.sourceRepo,
     );
   }
 
@@ -162,6 +197,11 @@ class JavaRelease extends Equatable {
       'jvmVersion': jvmVersion,
       'imageType': imageType,
       'uid': uid,
+      'libc': libc,
+      'source': source,
+      'buildSource': buildSource,
+      'buildSourceRepo': buildSourceRepo,
+      'sourceRepo': sourceRepo,
     };
   }
 
@@ -183,6 +223,11 @@ class JavaRelease extends Equatable {
       jvmVersion: map['jvmVersion'],
       imageType: map['imageType'],
       uid: map['uid'] ?? '',
+      libc: map['libc'],
+      source: map['source'],
+      buildSource: map['buildSource'],
+      buildSourceRepo: map['buildSourceRepo'],
+      sourceRepo: map['sourceRepo'],
     );
   }
 
@@ -192,22 +237,22 @@ class JavaRelease extends Equatable {
       JavaRelease.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'JavaRelease(directory: $directory, alias: $alias, javaVersion: $javaVersion, javaVersionDate: $javaVersionDate, implementor: $implementor, implementorVersion: $implementorVersion, modules: $modules, osArchitecture: $osArchitecture, osName: $osName, fullVersion: $fullVersion, semanticVersion: $semanticVersion, buildInfo: $buildInfo, jvmVariant: $jvmVariant, jvmVersion: $jvmVersion, imageType: $imageType, uid: $uid)';
-  }
-
-  @override
   List<Object> get props {
     return [
       directory,
       alias ?? '',
       javaVersion ?? '',
       javaVersionDate ?? '',
+      libc ?? '',
       implementor ?? '',
       implementorVersion ?? '',
       modules ?? '',
       osArchitecture ?? '',
       osName ?? '',
+      source ?? '',
+      buildSource ?? '',
+      buildSourceRepo ?? '',
+      sourceRepo ?? '',
       fullVersion ?? '',
       semanticVersion ?? '',
       buildInfo ?? '',
@@ -216,5 +261,10 @@ class JavaRelease extends Equatable {
       imageType ?? '',
       uid,
     ];
+  }
+
+  @override
+  String toString() {
+    return 'JavaRelease(directory: $directory, alias: $alias, javaVersion: $javaVersion, javaVersionDate: $javaVersionDate, libc: $libc, implementor: $implementor, implementorVersion: $implementorVersion, modules: $modules, osArchitecture: $osArchitecture, osName: $osName, source: $source, buildSource: $buildSource, buildSourceRepo: $buildSourceRepo, sourceRepo: $sourceRepo, fullVersion: $fullVersion, semanticVersion: $semanticVersion, buildInfo: $buildInfo, jvmVariant: $jvmVariant, jvmVersion: $jvmVersion, imageType: $imageType, uid: $uid)';
   }
 }

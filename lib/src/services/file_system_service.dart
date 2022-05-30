@@ -8,6 +8,8 @@ import '../constants/env_vars.dart';
 import '../constants/error_codes.dart';
 import '../constants/supported_platform.dart';
 import '../exceptions/jajvm_exception.dart';
+import '../models/java_release.dart';
+import '../utils/java_version_parser.dart';
 
 final _shellProvider = Provider((ref) => Shell(runInShell: Platform.isWindows));
 
@@ -346,6 +348,43 @@ echo \$$key
         message:
             'Exception: Could not set environment variable "$key" to "$value": ${e.message}',
         code: JajvmExceptionCode.updateEnvironmentFailed,
+      );
+    }
+  }
+
+  /// Parsers the java release file
+  ///
+  /// Returns null if the file does not exist
+  ///
+  /// Arguments:
+  /// - `path` to the java release directory
+  /// - `alias` of the java release. Must be unique.
+  ///
+  /// Throws [JajvmException] if the file could not be read
+  Future<JavaRelease> parseJavaReleaseDetails(String path) async {
+    try {
+      final releaseFile = File(join(path, 'release'));
+      final data = await releaseFile.readAsString();
+      return data.getJavaRelease(path);
+    } on FileSystemException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not read java release file at "${e.path}": ${e.message}',
+        code: JajvmExceptionCode.readFileFailed,
+      );
+    }
+  }
+
+  /// Copy a directory to a new location using shell
+  Future<void> copyDirectory(String source, String destination) async {
+    try {
+      final result = await _shell
+          .runExecutableArguments('cp', ['-r', source, destination]);
+    } on ShellException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not copy directory "$source" to "$destination": ${e.message}',
+        code: JajvmExceptionCode.copyDirectoryFailed,
       );
     }
   }
