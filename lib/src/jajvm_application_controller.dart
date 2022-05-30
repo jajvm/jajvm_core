@@ -115,7 +115,8 @@ class JajvmApplicationController {
     // Append default java release bin to system PATH if it is not already
     final path =
         await fileSystemService.readSystemEnvironmentVariable(kPathKey);
-    final hasBinInPath = path.trim().contains(defaultJavaBinPath);
+    
+    final hasBinInPath = path != null && path.trim().contains(defaultJavaBinPath);
     if (!hasBinInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,
@@ -128,7 +129,7 @@ class JajvmApplicationController {
     // Set JAVA_HOME to the default Java release
     final javaHomePath =
         await fileSystemService.readSystemEnvironmentVariable(kJavaHomeKey);
-    final hasJavaInPath = javaHomePath.trim().contains(defaultLinkPath);
+    final hasJavaInPath = javaHomePath != null && javaHomePath.trim().contains(defaultLinkPath);
     if (!hasJavaInPath) {
       await fileSystemService.writeEnvironmentVariable(
         kPathKey,

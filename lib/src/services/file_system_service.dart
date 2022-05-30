@@ -181,19 +181,48 @@ class FileSystemService {
   }
 
   /// Read only windows system environment variables.
-  ///
-  /// Throws [UnimplementedError] if not on windows.
+  /// 
+  /// Returns null if the environment variable is not set.
   ///
   /// Throws [JajvmException] if it fails to read the environment variable.
-  Future<String> readSystemEnvironmentVariable(String key) async {
-    if (!Platform.isWindows) throw UnimplementedError();
-
+  Future<String?> readSystemEnvironmentVariable(String key) async {
     try {
-      final result = await _shell.runExecutableArguments('reg', [
-        'query',
-        'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment /v $key'
-      ]);
-      return result.outText;
+      switch (kCurrentPlatform) {
+        case JajvmSupportedPlatform.windows:
+          final result = await _shell.runExecutableArguments('reg', [
+            'query',
+            'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment /v $key'
+          ]);
+          if (result.outText.contains('Invalid parameter(s)')) {
+            return null;
+          }
+          return result.outText;
+        default:
+          final result = await _shell.run('cat $kLinuxJajvmGlobalEnvPath');
+          final value = result.outText.trim();
+          if (value.contains('No such file or directory')) {
+            return null;
+          } else if (!value.contains('export $key')) {
+            return null;
+          }
+
+          // Return the part after the equals sign
+          return result.outLines
+              .firstWhere((line) =>
+                  line.trim().startsWith('export') &&
+                  line
+                      .trim()
+                      .replaceFirst('export', '')
+                      .trim()
+                      .startsWith(key) &&
+                  line.trim().replaceFirst(key, '').trim().startsWith('='))
+              .replaceFirst('export', '')
+              .trimLeft()
+              .replaceFirst(key, '')
+              .trimLeft()
+              .replaceFirst('=', '')
+              .trim();
+      }
     } on ShellException catch (e) {
       throw JajvmException(
         message:
@@ -203,7 +232,7 @@ class FileSystemService {
     }
   }
 
-  /// Write an environment variable to the system. Only works on windows.
+  /// Write an environment variable to the system
   ///
   /// Arguments:
   /// - [key] must not have spaces
