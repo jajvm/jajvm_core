@@ -52,7 +52,7 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype">void</span>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
 <span class="name ">createJajvmFolder</span>(<wbr>)
 
       
@@ -62,15 +62,15 @@
 <section class="desc markdown">
   <p>Creates the jajvm folder at the directory defined by the
 environment variable <code>JAJVM_HOME</code>. If <code>JAJVM_HOME</code> is not
-defined, it defaults to <a href="../../jajvm_core/kUserHome.html">kUserHome</a><code>/jajvm</code>.</p>
+defined, it defaults to <code>kUserHome</code><code>/jajvm</code>.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void createJajvmFolder() {
-  createFolder(kJajvmHome);
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; createJajvmFolder() async {
+  createFolder(await envJajvmHome);
 }</code></pre>
 </section>
 
@@ -122,6 +122,8 @@ defined, it defaults to <a href="../../jajvm_core/kUserHome.html">kUserHome</a><
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+        <li class="section-title"><a href="../../jajvm_core/FileSystemService-class.html#static-properties">Static properties</a></li>
+          <li><a href="../../jajvm_core/FileSystemService/provider.html">provider</a></li>
 
 
 </ol>

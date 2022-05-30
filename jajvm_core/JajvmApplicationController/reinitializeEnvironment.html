@@ -72,21 +72,24 @@
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; reinitializeEnvironment() async {
   if (!io.Platform.isWindows) throw UnimplementedError();
 
+  final defaultLinkPath = await fileSystemService.envDefaultLinkPath;
+  final defaultJavaBinPath = await fileSystemService.envDefaultJavaBinPath;
+
   &#47;&#47; Set JAVA_HOME to `~&#47;jajvm&#47;default`
   await fileSystemService.writeEnvironmentVariable(
     kJavaHomeKey,
-    kDefaultLinkPath,
+    defaultLinkPath,
     global: true,
   );
 
   &#47;&#47; Append default java release bin to system PATH if it is not already
   final path =
       await fileSystemService.readSystemEnvironmentVariable(kPathKey);
-  final hasBinInPath = path.trim().contains(kDefaultJavaBinPath);
+  final hasBinInPath = path.trim().contains(defaultJavaBinPath);
   if (!hasBinInPath) {
     await fileSystemService.writeEnvironmentVariable(
       kPathKey,
-      kDefaultJavaBinPath,
+      defaultJavaBinPath,
       global: true,
       append: true,
     );
@@ -95,11 +98,11 @@
   &#47;&#47; Set JAVA_HOME to the default Java release
   final javaHomePath =
       await fileSystemService.readSystemEnvironmentVariable(kJavaHomeKey);
-  final hasJavaInPath = javaHomePath.trim().contains(kDefaultLinkPath);
+  final hasJavaInPath = javaHomePath.trim().contains(defaultLinkPath);
   if (!hasJavaInPath) {
     await fileSystemService.writeEnvironmentVariable(
       kPathKey,
-      kDefaultLinkPath,
+      defaultLinkPath,
       global: true,
     );
   }
@@ -161,6 +164,8 @@
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+        <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#static-properties">Static properties</a></li>
+          <li><a href="../../jajvm_core/JajvmApplicationController/provider.html">provider</a></li>
 
 
 </ol>

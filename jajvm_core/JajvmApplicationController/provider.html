@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the setGlobalJavaRelease method from the JajvmApplicationController class, for the Dart programming language.">
-  <title>setGlobalJavaRelease method - JajvmApplicationController class - jajvm_core library - Dart API</title>
+  <meta name="description" content="API docs for the provider property from the JajvmApplicationController class, for the Dart programming language.">
+  <title>provider property - JajvmApplicationController class - jajvm_core library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
-    <li class="self-crumb">setGlobalJavaRelease method</li>
+    <li class="self-crumb">provider property</li>
   </ol>
-  <div class="self-name">setGlobalJavaRelease</div>
+  <div class="self-name">provider</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,37 +45,28 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">setGlobalJavaRelease</span> method 
+<h1><span class="kind-property">provider</span> property 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
-    <section class="multi-line-signature">
-      
+        <section class="multi-line-signature">
+          <a href="https://pub.dev/documentation/riverpod/2.0.0-dev.9/riverpod/Provider-class.html">Provider</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></span>&gt;</span>
+          <span class="name ">provider</span>
+          <div class="features">read / write</div>
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>&gt;</span></span>
-<span class="name ">setGlobalJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="setGlobalJavaRelease-param-release"><span class="type-annotation"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span> <span class="parameter-name">release</span></span></li>
-</ol>)
-
-      
-
-    </section>
-    
+        </section>
+        
 <section class="desc markdown">
-  <p>Set java release as global default</p>
-<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if it fails to update the symlink</p>
+  <p>Riverpod Provider for the instance of this class</p>
 </section>
 
-
-    
+        
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;io.Link&gt; setGlobalJavaRelease(JavaRelease release) async {
-  &#47;&#47; Update symlink at `~&#47;jajvm&#47;default` to point to `release.directory.path`
-  return fileSystemService.updateSymLink(
-    await fileSystemService.envDefaultLinkPath,
-    release.path,
-  );
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">static Provider&lt;JajvmApplicationController&gt; provider =
+    _jajvmApplicationControllerProvider;
+
+</code></pre>
 </section>
 
 
@@ -92,7 +83,7 @@
   <li><a href="../../index.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/JajvmApplicationController-class.html">JajvmApplicationController</a></li>
-  <li class="self-crumb">setGlobalJavaRelease method</li>
+  <li class="self-crumb">provider property</li>
 </ol>
 
 

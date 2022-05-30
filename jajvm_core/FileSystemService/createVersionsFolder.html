@@ -52,7 +52,7 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype">void</span>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
 <span class="name ">createVersionsFolder</span>(<wbr>)
 
       
@@ -60,15 +60,15 @@
     </section>
     
 <section class="desc markdown">
-  <p>Creates the jajvm <code>versions</code> folder in the <a href="../../jajvm_core/kJajvmHome.html">kJajvmHome</a> folder.</p>
+  <p>Creates the jajvm <code>versions</code> folder in the <code>kJajvmHome</code> folder.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void createVersionsFolder() {
-  createFolder(kJajvmVersionDirectory);
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; createVersionsFolder() async {
+  createFolder(await envJajvmVersionDirectory);
 }</code></pre>
 </section>
 
@@ -120,6 +120,8 @@
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+        <li class="section-title"><a href="../../jajvm_core/FileSystemService-class.html#static-properties">Static properties</a></li>
+          <li><a href="../../jajvm_core/FileSystemService/provider.html">provider</a></li>
 
 
 </ol>

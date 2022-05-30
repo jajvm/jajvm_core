@@ -75,7 +75,6 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;String?&gt; readEnvironmentVariable(String key) async {
-  if (!Platform.isWindows) throw UnimplementedError();
   try {
     switch (kCurrentPlatform) {
       case JajvmSupportedPlatform.windows:
@@ -146,6 +145,8 @@
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+        <li class="section-title"><a href="../../jajvm_core/FileSystemService-class.html#static-properties">Static properties</a></li>
+          <li><a href="../../jajvm_core/FileSystemService/provider.html">provider</a></li>
 
 
 </ol>

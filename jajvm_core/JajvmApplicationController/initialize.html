@@ -88,9 +88,8 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
   }
 
   &#47;&#47; Create jajvm folder if it does not exist
-  fileSystemService
-    ..createJajvmFolder()
-    ..createVersionsFolder();
+  await fileSystemService.createJajvmFolder();
+  await fileSystemService.createVersionsFolder();
 
   &#47;&#47; If setCurrentJavaHomeAsDefault is true, set the current java release as the default
   &#47;&#47; - Copy the current JAVA_HOME folder to the jajvm `versions` folder
@@ -98,7 +97,7 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
   &#47;&#47; - reinitializeEnvironment()
   if (!setCurrentJavaHomeAsDefault) return;
 
-  final currentJavaHome = kJavaHomeDirectory;
+  final currentJavaHome = await fileSystemService.envJavaHomeDirectory;
   if (currentJavaHome == null) return;
 
   final JavaRelease javaRelease = await copySystemJavaRelease(
@@ -106,7 +105,7 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
     alias: &#39;SystemJavaHome&#39;, &#47;&#47; TODO: Use better name by parsing path for info
   );
   fileSystemService.createSymLink(
-    kDefaultLinkPath,
+    await fileSystemService.envDefaultLinkPath,
     javaRelease.path,
   );
 
@@ -169,6 +168,8 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+        <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#static-properties">Static properties</a></li>
+          <li><a href="../../jajvm_core/JajvmApplicationController/provider.html">provider</a></li>
 
 
 </ol>
