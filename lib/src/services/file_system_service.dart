@@ -378,6 +378,12 @@ echo \$$key
   /// Copy a directory to a new location using shell
   ///
   /// This will override any files that exist in the destination with the same name
+  /// 
+  /// Arguments:
+  /// - `source` full path to the source directory, should include the drive letter
+  /// - `destination` full path to the destination directory, should include the drive letter
+  /// 
+  /// Throws [JajvmException] if the directory could not be copied
   Future<void> copyDirectory(String source, String destination) async {
     try {
       switch (kCurrentPlatform) {
