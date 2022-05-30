@@ -138,6 +138,10 @@ class JajvmApplicationController {
   }
 
   /// Copies a java release on the file system to jajvm's version directory
+  ///
+  /// Arguments:
+  /// - `path` full path to the java release directory
+  /// - `alias` must be unique
   Future<JavaRelease> addSystemJavaRelease({
     required String path,
     String? alias,
