@@ -181,7 +181,7 @@ class FileSystemService {
   }
 
   /// Read only windows system environment variables.
-  /// 
+  ///
   /// Returns null if the environment variable is not set.
   ///
   /// Throws [JajvmException] if it fails to read the environment variable.
@@ -198,7 +198,7 @@ class FileSystemService {
           }
           return result.outText;
         default:
-          final result = await _shell.run('cat $kLinuxJajvmGlobalEnvPath');
+          final result = await _shell.run('cat $kUnixJajvmGlobalEnvPath');
           final value = result.outText.trim();
           if (value.contains('No such file or directory')) {
             return null;
@@ -288,7 +288,7 @@ class FileSystemService {
           );
         default:
           final environmentFilePath =
-              global ? kLinuxJajvmGlobalEnvPath : kLinuxJajvmUserEnvPath;
+              global ? kUnixJajvmGlobalEnvPath : kUnixJajvmUserEnvPath;
 
           final result = await _shell.run('cat $environmentFilePath');
           final previousValue = result.outText.trim();

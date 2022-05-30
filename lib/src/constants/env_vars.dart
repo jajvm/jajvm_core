@@ -5,8 +5,8 @@ const String kJavaHomeKey = 'JAVA_HOME';
 const String kPathKey = 'PATH';
 const String kDefaultFolderName = 'default';
 const String kBinFolderName = 'bin';
-const String kLinuxJajvmGlobalEnvPath = '/etc/profile.d/jajvm_variables.sh';
-const String kLinuxJajvmUserEnvPath = '~/.profile';
+const String kUnixJajvmGlobalEnvPath = '/etc/profile.d/jajvm_variables.sh';
+const String kUnixJajvmUserEnvPath = '~/.profile';
 
 /// User Home Path Key
 String get kUserHomeKey {
