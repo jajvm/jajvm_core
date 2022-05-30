@@ -197,7 +197,7 @@ class FileSystemService {
             'query',
             'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment /v $key'
           ]);
-          if (result.outText.contains('Invalid parameter(s)')) {
+          if (result.exitCode == 1 || result.outText.contains('Invalid parameter(s)')) {
             return null;
           }
           return result.outText;
