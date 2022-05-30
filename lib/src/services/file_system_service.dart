@@ -388,6 +388,18 @@ echo \$$key
       );
     }
   }
+
+  /// Delete a directory
+  Future<void> deleteDirectory(String path) async {
+    try {
+      await Directory(path).delete(recursive: true);
+    } on FileSystemException catch(e) {
+      throw JajvmException(
+        message: 'Exception: Could not delete directory "${e.path}": ${e.message}',
+        code: JajvmExceptionCode.deleteDirectoryFailed,
+      );
+    }
+  }
 }
 
 extension EnvironmentReader on FileSystemService {

@@ -224,10 +224,18 @@ class JajvmApplicationController {
   /// Purge jajvm folder
   ///
   /// This deletes all saved java releases and symlinks
+  ///
+  /// TODO: Remove from path and JAVA_HOME
   Future<void> purge() async {
     // Delete `~/jajvm` folder recursively
+    await fileSystemService
+        .deleteDirectory(await fileSystemService.envJajvmHome);
 
     // Clear JAVA_HOME and remove itself from PATH
+    // await fileSystemService.removeEnvironmentVariable(
+    //   kJavaHomeKey,
+    //   global: true,
+    // );
   }
 
   /// List Java projects in database
