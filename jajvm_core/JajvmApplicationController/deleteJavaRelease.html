@@ -52,8 +52,9 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
-<span class="name ">deleteJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="deleteJavaRelease-param-release"><span class="type-annotation"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span> <span class="parameter-name">release</span></span></li>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">deleteJavaRelease</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="deleteJavaRelease-param-release"><span class="type-annotation"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span> <span class="parameter-name">release</span>, </span></li>
+<li><span class="parameter" id="deleteJavaRelease-param-force">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">force</span> = <span class="default-value">false</span>}</span></li>
 </ol>)
 
       
@@ -62,16 +63,34 @@
     
 <section class="desc markdown">
   <p>Delete java release from jajvm's <code>versions</code> directory</p>
-<p>Fails if the release is the default release, unless <code>force</code> is <code>true</code></p>
-<p>Returns <code>true</code> if the release was deleted, <code>false</code> otherwise</p>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> with code
+<a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.cannotRemoveDefaultRelease</a> if the
+release is the default release, unless <code>force</code> is <code>true</code>.</p>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> with code
+<a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.readLinkFailed</a> if it fails to determine
+if the link is the default release.</p>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> with code
+<a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.deleteDirectoryFailed</a> if it fails to
+delete the directory.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;bool&gt; deleteJavaRelease(JavaRelease release) async {
-  return false;
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; deleteJavaRelease(
+  JavaRelease release, {
+  bool force = false,
+}) async {
+  if (await fileSystemService.isDefaultRelease(release.path) &amp;&amp; !force) {
+    throw JajvmException(
+      message:
+          &#39;Exception: Cannot remove default release unless `force` is `true`&#39;,
+      code: JajvmExceptionCode.cannotRemoveDefaultRelease,
+    );
+  }
+
+  return fileSystemService.deleteDirectory(release.path);
 }</code></pre>
 </section>
 
