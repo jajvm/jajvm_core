@@ -102,9 +102,8 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
 
   final JavaRelease javaRelease = await addSystemJavaRelease(
     path: currentJavaHome.path,
-    alias: &#39;SystemJavaHome&#39;, &#47;&#47; TODO: Use better name by parsing path for info
   );
-  fileSystemService.createSymLink(
+  await fileSystemService.createSymLink(
     await fileSystemService.envDefaultLinkPath,
     javaRelease.path,
   );

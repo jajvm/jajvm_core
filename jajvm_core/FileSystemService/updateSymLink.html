@@ -52,7 +52,7 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>&gt;</span></span>
 <span class="name ">updateSymLink</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateSymLink-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span></li>
 <li><span class="parameter" id="updateSymLink-param-target"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">target</span></span></li>
 </ol>)
@@ -62,16 +62,16 @@
     </section>
     
 <section class="desc markdown">
-  <p>Updates a <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a> to point to a new path. If a <a href="https://api.dart.dev/stable/2.17.1/dart-io/FileSystemEntity-class.html">FileSystemEntity</a> already
-exists at <code>path</code>, it will be deleted and a new <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a> will be created.</p>
-<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if it fails to update the <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></p>
+  <p>Updates a <code>Link</code> to point to a new path. If a <a href="https://api.dart.dev/stable/2.17.1/dart-io/FileSystemEntity-class.html">FileSystemEntity</a> already
+exists at <code>path</code>, it will be deleted and a new <code>Link</code> will be created.</p>
+<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if it fails to update the <code>Link</code></p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Link updateSymLink(String path, String target) {
+  <pre class="language-dart"><code class="language-dart">Future&lt;Link&gt; updateSymLink(String path, String target) {
   try {
     final type = FileSystemEntity.typeSync(path);
     switch (type) {
@@ -82,7 +82,8 @@ exists at <code>path</code>, it will be deleted and a new <a href="https://api.d
         File(path).deleteSync();
         return createSymLink(path, target);
       case FileSystemEntityType.link:
-        return Link(path)..updateSync(target);
+        final link = Link(path);
+        return link.update(target);
       case FileSystemEntityType.notFound:
         return createSymLink(path, target);
     }

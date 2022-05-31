@@ -161,7 +161,7 @@ defined, it defaults to <code>kUserHome</code><code>/jajvm</code>.
 
         <dt id="createSymLink" class="callable">
   <span class="name"><a href="../jajvm_core/FileSystemService/createSymLink.html">createSymLink</a></span><span class="signature">(<wbr><span class="parameter" id="createSymLink-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span><span class="parameter" id="createSymLink-param-target"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">target</span></span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>&gt;</span></span>
   </span>
   
 
@@ -281,14 +281,14 @@ with code <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.adm
 
         <dt id="updateSymLink" class="callable">
   <span class="name"><a href="../jajvm_core/FileSystemService/updateSymLink.html">updateSymLink</a></span><span class="signature">(<wbr><span class="parameter" id="updateSymLink-param-path"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">path</span>, </span><span class="parameter" id="updateSymLink-param-target"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">target</span></span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>
+    <span class="returntype parameter">&#8594; <a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
-  Updates a <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a> to point to a new path. If a <a href="https://api.dart.dev/stable/2.17.1/dart-io/FileSystemEntity-class.html">FileSystemEntity</a> already
-exists at <code>path</code>, it will be deleted and a new <a href="https://api.dart.dev/stable/2.17.1/dart-io/Link-class.html">Link</a> will be created.
+  Updates a <code>Link</code> to point to a new path. If a <a href="https://api.dart.dev/stable/2.17.1/dart-io/FileSystemEntity-class.html">FileSystemEntity</a> already
+exists at <code>path</code>, it will be deleted and a new <code>Link</code> will be created.
   
 
 </dd>
