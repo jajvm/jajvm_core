@@ -74,9 +74,8 @@ class JajvmApplicationController {
 
     final JavaRelease javaRelease = await addSystemJavaRelease(
       path: currentJavaHome.path,
-      alias: 'SystemJavaHome', // TODO: Use better name by parsing path for info
     );
-    fileSystemService.createSymLink(
+    await fileSystemService.createSymLink(
       await fileSystemService.envDefaultLinkPath,
       javaRelease.path,
     );
