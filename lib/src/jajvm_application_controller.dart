@@ -233,7 +233,7 @@ class JajvmApplicationController {
 
   /// List java releases in jajvm's versions directory
   Future<List<JavaRelease>> listJavaReleases() async {
-    return [];
+    return fileSystemService.listReleases();
   }
 
   /// Install Java version from a supported implementor

@@ -455,6 +455,33 @@ echo \$$key
       );
     }
   }
+
+  /// List java releases in jajvm `versions` directory
+  Future<List<JavaRelease>> listReleases() async {
+    try {
+      final versionsDir = Directory(await envJajvmVersionPath);
+      final files = <Future<JavaRelease>>[];
+      final completer = Completer<List<Future<JavaRelease>>>();
+      final lister = versionsDir.list(recursive: false);
+      lister.map((entry) => parseJavaReleaseDetails(entry.path)).listen(
+            onDone: () => completer.complete(files),
+            files.add,
+          );
+
+      return Future.wait(await completer.future).catchError((e, st) {
+        throw JajvmException(
+          message: 'Exception: Could not list java releases: ${e.message}',
+          code: JajvmExceptionCode.listReleasesFailed,
+        );
+      });
+    } on FileSystemException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not read versions directory at "${e.path}": ${e.message}',
+        code: JajvmExceptionCode.readDirectoryFailed,
+      );
+    }
+  }
 }
 
 extension EnvironmentReader on FileSystemService {
