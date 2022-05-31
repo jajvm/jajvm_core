@@ -438,6 +438,23 @@ echo \$$key
       );
     }
   }
+
+  /// Determines if a release is the default
+  Future<bool> isDefaultRelease(String path) async {
+    try {
+      final link = Link(await envDefaultLinkPath);
+      if (!await link.exists()) return false;
+
+      final target = await link.target();
+      return canonicalize(target) == canonicalize(path);
+    } on FileSystemException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not read symlink at "${e.path}": ${e.message}',
+        code: JajvmExceptionCode.readLinkFailed,
+      );
+    }
+  }
 }
 
 extension EnvironmentReader on FileSystemService {

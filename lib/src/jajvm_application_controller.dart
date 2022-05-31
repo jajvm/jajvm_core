@@ -205,11 +205,30 @@ class JajvmApplicationController {
 
   /// Delete java release from jajvm's `versions` directory
   ///
-  /// Fails if the release is the default release, unless [force] is `true`
+  /// Throws [JajvmException] with code
+  /// [JajvmExceptionCode.cannotRemoveDefaultRelease] if the
+  /// release is the default release, unless [force] is `true`.
   ///
-  /// Returns `true` if the release was deleted, `false` otherwise
-  Future<bool> deleteJavaRelease(JavaRelease release) async {
-    return false;
+  /// Throws [JajvmException] with code
+  /// [JajvmExceptionCode.readLinkFailed] if it fails to determine
+  /// if the link is the default release.
+  ///
+  /// Throws [JajvmException] with code
+  /// [JajvmExceptionCode.deleteDirectoryFailed] if it fails to
+  /// delete the directory.
+  Future<void> deleteJavaRelease(
+    JavaRelease release, {
+    bool force = false,
+  }) async {
+    if (await fileSystemService.isDefaultRelease(release.path) && !force) {
+      throw JajvmException(
+        message:
+            'Exception: Cannot remove default release unless `force` is `true`',
+        code: JajvmExceptionCode.cannotRemoveDefaultRelease,
+      );
+    }
+
+    return fileSystemService.deleteDirectory(release.path);
   }
 
   /// List java releases in jajvm's versions directory
