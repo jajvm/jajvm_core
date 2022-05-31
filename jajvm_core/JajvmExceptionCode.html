@@ -94,8 +94,8 @@
       <h2>Values</h2>
 
       <dl class="properties">
-          <dt id="createFolderFailed" class="constant">
-    <span class="name ">createFolderFailed</span>
+          <dt id="createDirectoryFailed" class="constant">
+    <span class="name ">createDirectoryFailed</span>
   <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
   
 
@@ -106,6 +106,66 @@
 
   <div>
     <span class="signature"><code>JajvmExceptionCode(&#39;create-folder-failed&#39;)</code></span>
+  </div>
+</dd>
+
+          <dt id="copyDirectoryFailed" class="constant">
+    <span class="name ">copyDirectoryFailed</span>
+  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
+  
+
+</dt>
+<dd>
+  
+  
+
+  <div>
+    <span class="signature"><code>JajvmExceptionCode(&#39;copy-directory-failed&#39;)</code></span>
+  </div>
+</dd>
+
+          <dt id="deleteDirectoryFailed" class="constant">
+    <span class="name ">deleteDirectoryFailed</span>
+  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
+  
+
+</dt>
+<dd>
+  
+  
+
+  <div>
+    <span class="signature"><code>JajvmExceptionCode(&#39;delete-directory-failed&#39;)</code></span>
+  </div>
+</dd>
+
+          <dt id="readDirectoryFailed" class="constant">
+    <span class="name ">readDirectoryFailed</span>
+  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
+  
+
+</dt>
+<dd>
+  
+  
+
+  <div>
+    <span class="signature"><code>JajvmExceptionCode(&#39;read-directory-failed&#39;)</code></span>
+  </div>
+</dd>
+
+          <dt id="listReleasesFailed" class="constant">
+    <span class="name ">listReleasesFailed</span>
+  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
+  
+
+</dt>
+<dd>
+  
+  
+
+  <div>
+    <span class="signature"><code>JajvmExceptionCode(&#39;list-releases-failed&#39;)</code></span>
   </div>
 </dd>
 
@@ -226,36 +286,6 @@
 
   <div>
     <span class="signature"><code>JajvmExceptionCode(&#39;read-file-failed&#39;)</code></span>
-  </div>
-</dd>
-
-          <dt id="copyDirectoryFailed" class="constant">
-    <span class="name ">copyDirectoryFailed</span>
-  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
-  
-
-</dt>
-<dd>
-  
-  
-
-  <div>
-    <span class="signature"><code>JajvmExceptionCode(&#39;copy-directory-failed&#39;)</code></span>
-  </div>
-</dd>
-
-          <dt id="deleteDirectoryFailed" class="constant">
-    <span class="name ">deleteDirectoryFailed</span>
-  <span class="signature">&#8594; const <a href="../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode</a></span>
-  
-
-</dt>
-<dd>
-  
-  
-
-  <div>
-    <span class="signature"><code>JajvmExceptionCode(&#39;delete-directory-failed&#39;)</code></span>
   </div>
 </dd>
 
@@ -406,7 +436,7 @@
   
 
   <div>
-    <span class="signature"><code>[createFolderFailed, createLinkFailed, updateLinkFailed, readLinkFailed, updateEnvironmentFailed, readEnvironmentFailed, administratorRequired, checkAdministratorFailed, readFileFailed, copyDirectoryF…</code></span>
+    <span class="signature"><code>[createDirectoryFailed, copyDirectoryFailed, deleteDirectoryFailed, readDirectoryFailed, listReleasesFailed, createLinkFailed, updateLinkFailed, readLinkFailed, updateEnvironmentFailed, readEnvironmen…</code></span>
   </div>
 </dd>
 
@@ -473,7 +503,11 @@
           <li><a href="../jajvm_core/JajvmExceptionCode/JajvmExceptionCode.html">JajvmExceptionCode</a></li>
 
     <li class="section-title"><a href="../jajvm_core/JajvmExceptionCode.html#values">Values</a></li>
-    <li><a href="../jajvm_core/JajvmExceptionCode.html#createFolderFailed">createFolderFailed</a></li>
+    <li><a href="../jajvm_core/JajvmExceptionCode.html#createDirectoryFailed">createDirectoryFailed</a></li>
+    <li><a href="../jajvm_core/JajvmExceptionCode.html#copyDirectoryFailed">copyDirectoryFailed</a></li>
+    <li><a href="../jajvm_core/JajvmExceptionCode.html#deleteDirectoryFailed">deleteDirectoryFailed</a></li>
+    <li><a href="../jajvm_core/JajvmExceptionCode.html#readDirectoryFailed">readDirectoryFailed</a></li>
+    <li><a href="../jajvm_core/JajvmExceptionCode.html#listReleasesFailed">listReleasesFailed</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#createLinkFailed">createLinkFailed</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#updateLinkFailed">updateLinkFailed</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#readLinkFailed">readLinkFailed</a></li>
@@ -482,8 +516,6 @@
     <li><a href="../jajvm_core/JajvmExceptionCode.html#administratorRequired">administratorRequired</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#checkAdministratorFailed">checkAdministratorFailed</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#readFileFailed">readFileFailed</a></li>
-    <li><a href="../jajvm_core/JajvmExceptionCode.html#copyDirectoryFailed">copyDirectoryFailed</a></li>
-    <li><a href="../jajvm_core/JajvmExceptionCode.html#deleteDirectoryFailed">deleteDirectoryFailed</a></li>
     <li><a href="../jajvm_core/JajvmExceptionCode.html#cannotRemoveDefaultRelease">cannotRemoveDefaultRelease</a></li>
 
     <li class="section-title">

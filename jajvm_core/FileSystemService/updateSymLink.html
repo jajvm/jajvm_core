@@ -71,15 +71,15 @@ exists at <code>path</code>, it will be deleted and a new <code>Link</code> will
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;Link&gt; updateSymLink(String path, String target) {
+  <pre class="language-dart"><code class="language-dart">Future&lt;Link&gt; updateSymLink(String path, String target) async {
   try {
-    final type = FileSystemEntity.typeSync(path);
+    final type = await FileSystemEntity.type(path);
     switch (type) {
       case FileSystemEntityType.directory:
-        Directory(path).deleteSync(recursive: true);
+        await Directory(path).delete(recursive: true);
         return createSymLink(path, target);
       case FileSystemEntityType.file:
-        File(path).deleteSync();
+        await File(path).delete();
         return createSymLink(path, target);
       case FileSystemEntityType.link:
         final link = Link(path);
@@ -140,6 +140,7 @@ exists at <code>path</code>, it will be deleted and a new <code>Link</code> will
     <li><a href="../../jajvm_core/FileSystemService/deleteDirectory.html">deleteDirectory</a></li>
     <li><a href="../../jajvm_core/FileSystemService/isAdministratorMode.html">isAdministratorMode</a></li>
     <li><a href="../../jajvm_core/FileSystemService/isDefaultRelease.html">isDefaultRelease</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/listReleases.html">listReleases</a></li>
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../jajvm_core/FileSystemService/parseJavaReleaseDetails.html">parseJavaReleaseDetails</a></li>
     <li><a href="../../jajvm_core/FileSystemService/readEnvironmentVariable.html">readEnvironmentVariable</a></li>

@@ -72,7 +72,7 @@
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; purge() async {
   &#47;&#47; Delete `~&#47;jajvm` folder recursively
   await fileSystemService
-      .deleteDirectory(await fileSystemService.envJajvmHome);
+      .deleteDirectory(await fileSystemService.envJajvmHomePath);
 
   &#47;&#47; Clear JAVA_HOME and remove itself from PATH
   &#47;&#47; await fileSystemService.removeEnvironmentVariable(

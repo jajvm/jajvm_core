@@ -105,7 +105,7 @@ or if it fails to copy the directory to the jajvm <code>versions</code> folder</
       .replaceAll(&#39; &#39;, &#39;_&#39;);
 
   &#47;&#47; Determine new path to copy folder to
-  final versionsPath = await fileSystemService.envJajvmVersionDirectory;
+  final versionsPath = await fileSystemService.envJajvmVersionPath;
   final destination = p.join(versionsPath, cleanedAlias);
 
   &#47;&#47; Copy folder to new path

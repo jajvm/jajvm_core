@@ -76,7 +76,7 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
   <pre class="language-dart"><code class="language-dart">Future&lt;Link&gt; createSymLink(String path, String target) async {
   try {
     final link = Link(path);
-    if (link.existsSync()) return link;
+    if (await link.exists()) return link;
 
     if (Platform.isWindows &amp;&amp; !await isAdministratorMode()) {
       throw JajvmException(
@@ -86,22 +86,22 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
       );
     }
 
-    final type = FileSystemEntity.typeSync(path);
+    final type = await FileSystemEntity.type(path);
     switch (type) {
       case FileSystemEntityType.directory:
-        Directory(path).deleteSync(recursive: true);
+        await Directory(path).delete(recursive: true);
         break;
       case FileSystemEntityType.file:
-        File(path).deleteSync();
+        await File(path).delete();
         break;
       case FileSystemEntityType.link:
-        link.deleteSync();
+        await link.delete();
         break;
       case FileSystemEntityType.notFound:
         break;
     }
 
-    return link..createSync(target, recursive: true);
+    return link.create(target, recursive: true);
   } on FileSystemException catch (e) {
     throw JajvmException(
       message:
@@ -152,6 +152,7 @@ with code <a href="../../jajvm_core/JajvmExceptionCode.html">JajvmExceptionCode.
     <li><a href="../../jajvm_core/FileSystemService/deleteDirectory.html">deleteDirectory</a></li>
     <li><a href="../../jajvm_core/FileSystemService/isAdministratorMode.html">isAdministratorMode</a></li>
     <li><a href="../../jajvm_core/FileSystemService/isDefaultRelease.html">isDefaultRelease</a></li>
+    <li><a href="../../jajvm_core/FileSystemService/listReleases.html">listReleases</a></li>
     <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../jajvm_core/FileSystemService/parseJavaReleaseDetails.html">parseJavaReleaseDetails</a></li>
     <li><a href="../../jajvm_core/FileSystemService/readEnvironmentVariable.html">readEnvironmentVariable</a></li>

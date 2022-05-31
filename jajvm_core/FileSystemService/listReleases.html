@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the copyDirectory method from the FileSystemService class, for the Dart programming language.">
-  <title>copyDirectory method - FileSystemService class - jajvm_core library - Dart API</title>
+  <meta name="description" content="API docs for the listReleases method from the FileSystemService class, for the Dart programming language.">
+  <title>listReleases method - FileSystemService class - jajvm_core library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
     <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
-    <li class="self-crumb">copyDirectory method</li>
+    <li class="self-crumb">listReleases method</li>
   </ol>
-  <div class="self-name">copyDirectory</div>
+  <div class="self-name">listReleases</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,72 +45,50 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">copyDirectory</span> method 
+<h1><span class="kind-method">listReleases</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
-<span class="name ">copyDirectory</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="copyDirectory-param-source"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">source</span>, </span></li>
-<li><span class="parameter" id="copyDirectory-param-destination"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">destination</span></span></li>
-</ol>)
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../jajvm_core/JavaRelease-class.html">JavaRelease</a></span>&gt;</span></span>&gt;</span></span>
+<span class="name ">listReleases</span>(<wbr>)
 
       
 
     </section>
     
 <section class="desc markdown">
-  <p>Copy a directory to a new location using shell</p>
-<p>This will override any files that exist in the destination with the same name</p>
-<p>Arguments:</p>
-<ul>
-<li><code>source</code> full path to the source directory, should include the drive letter</li>
-<li><code>destination</code> full path to the destination directory, should include the drive letter</li>
-</ul>
-<p>Throws <a href="../../jajvm_core/JajvmException-class.html">JajvmException</a> if the directory could not be copied</p>
+  <p>List java releases in jajvm <code>versions</code> directory</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; copyDirectory(String source, String destination) async {
+  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;JavaRelease&gt;&gt; listReleases() async {
   try {
-    switch (kCurrentPlatform) {
-      case JajvmSupportedPlatform.windows:
-        &#47;&#47; Will override any files that exist in the destination with the same name
-        final result = await _shell.runExecutableArguments(
-            &#39;xcopy&#39;, [source, destination, &#39;&#47;s&#39;, &#39;&#47;e&#39;, &#39;&#47;y&#39;]);
-        &#47;&#47; Failure exit codes are 4 and 5: https:&#47;&#47;docs.microsoft.com&#47;en-us&#47;windows-server&#47;administration&#47;windows-commands&#47;xcopy
-        if (result.exitCode &lt;= 3 || result.exitCode &gt; 5) return;
-
-        final message = result.exitCode == 4
-            ? &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: Initialization error occurred. There is not enough memory or disk space, or you entered an invalid drive name or invalid syntax on the command line.&#39;
-            : &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: Disk write error occurred.&#39;;
-
-        throw JajvmException(
-          message: message,
-          code: JajvmExceptionCode.copyDirectoryFailed,
+    final versionsDir = Directory(await envJajvmVersionPath);
+    final files = &lt;Future&lt;JavaRelease&gt;&gt;[];
+    final completer = Completer&lt;List&lt;Future&lt;JavaRelease&gt;&gt;&gt;();
+    final lister = versionsDir.list(recursive: false);
+    lister.map((entry) =&gt; parseJavaReleaseDetails(entry.path)).listen(
+          onDone: () =&gt; completer.complete(files),
+          files.add,
         );
-      default:
-        final result = await _shell.runExecutableArguments(
-            &#39;cp&#39;, [&#39;-r&#39;, join(source, &#39;*&#39;), destination]);
-        &#47;&#47; Success exit code is 0: https:&#47;&#47;www.gnu.org&#47;software&#47;coreutils&#47;manual&#47;html_node&#47;cp-invocation.html#cp-invocation
-        if (result.exitCode == 0) return;
 
-        throw JajvmException(
-          message:
-              &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;&#39;,
-          code: JajvmExceptionCode.copyDirectoryFailed,
-        );
-    }
-  } on ShellException catch (e) {
+    return Future.wait(await completer.future).catchError((e, st) {
+      throw JajvmException(
+        message: &#39;Exception: Could not list java releases: ${e.message}&#39;,
+        code: JajvmExceptionCode.listReleasesFailed,
+      );
+    });
+  } on FileSystemException catch (e) {
     throw JajvmException(
       message:
-          &#39;Exception: Could not copy directory &quot;$source&quot; to &quot;$destination&quot;: ${e.message}&#39;,
-      code: JajvmExceptionCode.copyDirectoryFailed,
+          &#39;Exception: Could not read versions directory at &quot;${e.path}&quot;: ${e.message}&#39;,
+      code: JajvmExceptionCode.readDirectoryFailed,
     );
   }
 }</code></pre>
@@ -130,7 +108,7 @@
   <li><a href="../../index.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/jajvm_core-library.html">jajvm_core</a></li>
   <li><a href="../../jajvm_core/FileSystemService-class.html">FileSystemService</a></li>
-  <li class="self-crumb">copyDirectory method</li>
+  <li class="self-crumb">listReleases method</li>
 </ol>
 
 
