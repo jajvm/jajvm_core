@@ -186,7 +186,7 @@ class JajvmApplicationController {
   }
 
   /// Search file system for valid java releases
-  Future<List<JavaRelease>> searchForJavaReleases(String root) async {
+  Future<List<JavaRelease>> findJavaReleases(String root) async {
     // Search for java releases on the system recursively starting from [root]
     // - If found, create JavaRelease object and add to list
     // - If none found, return empty list
