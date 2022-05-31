@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -32,26 +33,26 @@ class FileSystemService {
   /// environment variable `JAJVM_HOME`. If `JAJVM_HOME` is not
   /// defined, it defaults to [kUserHome]`/jajvm`.
   Future<void> createJajvmFolder() async {
-    createFolder(await envJajvmHome);
+    return createFolder(await envJajvmHomePath);
   }
 
   /// Creates the jajvm `versions` folder in the [kJajvmHome] folder.
   Future<void> createVersionsFolder() async {
-    createFolder(await envJajvmVersionDirectory);
+    return createFolder(await envJajvmVersionPath);
   }
 
   /// Creates a folder at the given path if it does not exist.
-  void createFolder(String path) {
+  Future<void> createFolder(String path) async {
     try {
       final dir = Directory(path);
-      if (dir.existsSync()) return;
+      if (await dir.exists()) return;
 
-      dir.createSync(recursive: true);
+      await dir.create(recursive: true);
     } on FileSystemException catch (e) {
       throw JajvmException(
         message:
             'Exception: Could not create folder at "${e.path}": ${e.message}',
-        code: JajvmExceptionCode.createFolderFailed,
+        code: JajvmExceptionCode.createDirectoryFailed,
       );
     }
   }
@@ -60,15 +61,15 @@ class FileSystemService {
   /// exists at [path], it will be deleted and a new [Link] will be created.
   ///
   /// Throws [JajvmException] if it fails to update the [Link]
-  Future<Link> updateSymLink(String path, String target) {
+  Future<Link> updateSymLink(String path, String target) async {
     try {
-      final type = FileSystemEntity.typeSync(path);
+      final type = await FileSystemEntity.type(path);
       switch (type) {
         case FileSystemEntityType.directory:
-          Directory(path).deleteSync(recursive: true);
+          await Directory(path).delete(recursive: true);
           return createSymLink(path, target);
         case FileSystemEntityType.file:
-          File(path).deleteSync();
+          await File(path).delete();
           return createSymLink(path, target);
         case FileSystemEntityType.link:
           final link = Link(path);
@@ -97,7 +98,7 @@ class FileSystemService {
   Future<Link> createSymLink(String path, String target) async {
     try {
       final link = Link(path);
-      if (link.existsSync()) return link;
+      if (await link.exists()) return link;
 
       if (Platform.isWindows && !await isAdministratorMode()) {
         throw JajvmException(
@@ -107,22 +108,22 @@ class FileSystemService {
         );
       }
 
-      final type = FileSystemEntity.typeSync(path);
+      final type = await FileSystemEntity.type(path);
       switch (type) {
         case FileSystemEntityType.directory:
-          Directory(path).deleteSync(recursive: true);
+          await Directory(path).delete(recursive: true);
           break;
         case FileSystemEntityType.file:
-          File(path).deleteSync();
+          await File(path).delete();
           break;
         case FileSystemEntityType.link:
-          link.deleteSync();
+          await link.delete();
           break;
         case FileSystemEntityType.notFound:
           break;
       }
 
-      return link..createSync(target, recursive: true);
+      return link.create(target, recursive: true);
     } on FileSystemException catch (e) {
       throw JajvmException(
         message:
@@ -486,7 +487,7 @@ echo \$$key
 
 extension EnvironmentReader on FileSystemService {
   /// User Home Path
-  Future<String> get envUserHome async {
+  Future<String> get envUserHomePath async {
     final userHome = await readEnvironmentVariable(kUserHomeKey);
     return userHome!;
   }
@@ -498,32 +499,32 @@ extension EnvironmentReader on FileSystemService {
   }
 
   /// Jajvm Home Path
-  Future<String> get envJajvmHome async {
+  Future<String> get envJajvmHomePath async {
     final home = await readEnvironmentVariable(kJajvmHomeKey);
     if (home != null) {
       return normalize(home);
     }
 
-    return join(await envUserHome, 'jajvm');
+    return join(await envUserHomePath, 'jajvm');
   }
 
   /// Jajvm Java Versions Path
-  Future<String> get envJajvmVersionDirectory async =>
-      join(await envJajvmHome, 'versions');
+  Future<String> get envJajvmVersionPath async =>
+      join(await envJajvmHomePath, 'versions');
 
   /// User Home Path
-  Future<String?> get envJavaHome async {
+  Future<String?> get envJavaHomePath async {
     return await readEnvironmentVariable(kJavaHomeKey);
   }
 
   /// Java Home Path
   Future<Directory?> get envJavaHomeDirectory async {
-    final home = await envJavaHome;
+    final home = await envJavaHomePath;
     return home != null ? Directory(home) : null;
   }
 
   Future<String> get envDefaultLinkPath async =>
-      join(await envJajvmHome, kJajvmDefaultSymLinkName);
+      join(await envJajvmHomePath, kJajvmDefaultSymLinkName);
 
   Future<String> get envDefaultJavaBinPath async =>
       join(await envDefaultLinkPath, kBinFolderName);

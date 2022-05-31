@@ -174,7 +174,7 @@ class JajvmApplicationController {
         .replaceAll(' ', '_');
 
     // Determine new path to copy folder to
-    final versionsPath = await fileSystemService.envJajvmVersionDirectory;
+    final versionsPath = await fileSystemService.envJajvmVersionPath;
     final destination = p.join(versionsPath, cleanedAlias);
 
     // Copy folder to new path
@@ -247,7 +247,7 @@ class JajvmApplicationController {
   Future<void> purge() async {
     // Delete `~/jajvm` folder recursively
     await fileSystemService
-        .deleteDirectory(await fileSystemService.envJajvmHome);
+        .deleteDirectory(await fileSystemService.envJajvmHomePath);
 
     // Clear JAVA_HOME and remove itself from PATH
     // await fileSystemService.removeEnvironmentVariable(
@@ -256,7 +256,7 @@ class JajvmApplicationController {
     // );
   }
 
-  /// List Java projects in database
+  /// List Java projects in `jajvm` versions directory
   Future<List<JavaProject>> listProjects() async {
     return [];
   }
