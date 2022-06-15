@@ -9,6 +9,7 @@ import 'exceptions/jajvm_exception.dart';
 import 'models/java_project.dart';
 import 'models/java_release.dart';
 import 'services/file_system_service.dart';
+import 'utils/platform_utils.dart';
 
 /// Checks if you are awesome. Spoiler: you are.
 class Awesome {
@@ -253,7 +254,7 @@ class JajvmApplicationController {
       global: true,
     );
 
-    if (io.Platform.isLinux) {
+    if (PlatformUtils.isUnix) {
       // Remove global paths
       final file = io.File(kUnixJajvmGlobalEnvPath);
       await file.delete();
