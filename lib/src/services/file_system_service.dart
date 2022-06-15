@@ -248,9 +248,9 @@ class FileSystemService {
   /// - [global] must be running as administrator or root/sudo to use
   ///
   /// Throws [JajvmException] if the environment variable could not be set.
-  Future<void> writeEnvironmentVariable(
-    String key,
-    String value, {
+  Future<void> writeEnvironmentVariable({
+    required String key,
+    required String value,
     bool global = false,
     bool append = false,
   }) async {
@@ -554,6 +554,6 @@ extension EnvironmentReader on FileSystemService {
   Future<String> get envDefaultLinkPath async =>
       join(await envJajvmHomePath, kJajvmDefaultSymLinkName);
 
-  Future<String> get envDefaultJavaBinPath async =>
+  Future<String> get envDefaultJajvmJavaBinPath async =>
       join(await envDefaultLinkPath, kBinFolderName);
 }

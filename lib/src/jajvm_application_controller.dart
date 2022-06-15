@@ -99,12 +99,13 @@ class JajvmApplicationController {
   /// Throws [JajvmException] if the environment variables could not be set.
   Future<void> reinitializeEnvironment() async {
     final defaultLinkPath = await fileSystemService.envDefaultLinkPath;
-    final defaultJavaBinPath = await fileSystemService.envDefaultJavaBinPath;
+    final defaultJavaBinPath =
+        await fileSystemService.envDefaultJajvmJavaBinPath;
 
     // Set JAVA_HOME to `~/jajvm/default`
     await fileSystemService.writeEnvironmentVariable(
-      kJavaHomeKey,
-      defaultLinkPath,
+      key: kJavaHomeKey,
+      value: defaultLinkPath,
       global: true,
     );
 
@@ -116,8 +117,8 @@ class JajvmApplicationController {
         path != null && path.trim().contains(defaultJavaBinPath);
     if (!hasBinInPath) {
       await fileSystemService.writeEnvironmentVariable(
-        kPathKey,
-        defaultJavaBinPath,
+        key: kPathKey,
+        value: defaultJavaBinPath,
         global: true,
         append: true,
       );
@@ -130,8 +131,8 @@ class JajvmApplicationController {
         javaHomePath != null && javaHomePath.trim().contains(defaultLinkPath);
     if (!hasJavaInPath) {
       await fileSystemService.writeEnvironmentVariable(
-        kPathKey,
-        defaultLinkPath,
+        key: kPathKey,
+        value: defaultLinkPath,
         global: true,
       );
     }
