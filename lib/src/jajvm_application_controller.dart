@@ -242,16 +242,21 @@ class JajvmApplicationController {
 
   /// Purge jajvm folder
   ///
-  /// This deletes all saved java releases and symlinks
-  ///
-  /// TODO: Remove from path
+  /// This deletes all saved java releases and symlinks. This removes the
+  /// [kJavaHomeKey] environment variable, but not the java paths in the PATH environment variable.
+  /// It also deletes the jajvm specific global environment variables file.
   Future<void> purge() async {
     // Remove itself from PATH
     await fileSystemService.removeEnvironmentVariable(
-      key: kPathKey,
-      value: await fileSystemService.envDefaultJajvmJavaBinPath,
+      key: kJajvmHomeKey,
       global: true,
     );
+
+    if (io.Platform.isLinux) {
+      // Remove global paths
+      final file = io.File(kUnixJajvmGlobalEnvPath);
+      await file.delete();
+    }
 
     // Delete `~/jajvm` folder recursively
     await fileSystemService
