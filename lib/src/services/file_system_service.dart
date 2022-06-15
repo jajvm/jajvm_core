@@ -357,7 +357,7 @@ echo \$$key
   }
 
   /// Remove value from the global (system) environment
-  Future<void> removeEnvironmentVariable({
+  Future<void> removeWindowsGlobalEnvironmentVariable({
     required String key,
     String? value,
     bool global = false,
@@ -365,7 +365,15 @@ echo \$$key
     try {
       switch (kCurrentPlatform) {
         case JajvmSupportedPlatform.windows:
-          final result = await _shell.runExecutableArguments('setx', [
+          if (global && !await isAdministratorMode()) {
+            throw JajvmException(
+              message:
+                  'Exception: Cannot write environment variable: Not running as administrator or developer mode not enabled: https://bit.ly/3vxRr2M',
+              code: JajvmExceptionCode.administratorRequired,
+            );
+          }
+
+          await _shell.runExecutableArguments('setx', [
             if (global) ...['/M'],
             key,
             if (value != null) value,

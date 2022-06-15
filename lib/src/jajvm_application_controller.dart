@@ -246,8 +246,9 @@ class JajvmApplicationController {
   /// [kJavaHomeKey] environment variable, but not the java paths in the PATH environment variable.
   /// It also deletes the jajvm specific global environment variables file.
   Future<void> purge() async {
-    // Remove itself from PATH
-    await fileSystemService.removeEnvironmentVariable(
+    // Remove jajavm home global environment variable
+    // Ignored if not on windows
+    await fileSystemService.removeWindowsGlobalEnvironmentVariable(
       key: kJajvmHomeKey,
       global: true,
     );
