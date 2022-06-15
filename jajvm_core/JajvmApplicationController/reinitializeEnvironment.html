@@ -52,7 +52,7 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.3/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
 <span class="name ">reinitializeEnvironment</span>(<wbr>)
 
       
@@ -70,12 +70,13 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; reinitializeEnvironment() async {
   final defaultLinkPath = await fileSystemService.envDefaultLinkPath;
-  final defaultJavaBinPath = await fileSystemService.envDefaultJavaBinPath;
+  final defaultJavaBinPath =
+      await fileSystemService.envDefaultJajvmJavaBinPath;
 
   &#47;&#47; Set JAVA_HOME to `~&#47;jajvm&#47;default`
   await fileSystemService.writeEnvironmentVariable(
-    kJavaHomeKey,
-    defaultLinkPath,
+    key: kJavaHomeKey,
+    value: defaultLinkPath,
     global: true,
   );
 
@@ -87,8 +88,8 @@
       path != null &amp;&amp; path.trim().contains(defaultJavaBinPath);
   if (!hasBinInPath) {
     await fileSystemService.writeEnvironmentVariable(
-      kPathKey,
-      defaultJavaBinPath,
+      key: kPathKey,
+      value: defaultJavaBinPath,
       global: true,
       append: true,
     );
@@ -101,8 +102,8 @@
       javaHomePath != null &amp;&amp; javaHomePath.trim().contains(defaultLinkPath);
   if (!hasJavaInPath) {
     await fileSystemService.writeEnvironmentVariable(
-      kPathKey,
-      defaultLinkPath,
+      key: kPathKey,
+      value: defaultLinkPath,
       global: true,
     );
   }
@@ -138,8 +139,8 @@
       <a href="../../jajvm_core/JajvmApplicationController-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../../jajvm_core/JajvmApplicationController/fileSystemService.html">fileSystemService</a></li>
-    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/hashCode.html">hashCode</a></li>
-    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.3/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.3/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
     <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#instance-methods">Methods</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/addProject.html">addProject</a></li>
@@ -152,16 +153,16 @@
     <li><a href="../../jajvm_core/JajvmApplicationController/installJavaVersion.html">installJavaVersion</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/listJavaReleases.html">listJavaReleases</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/listProjects.html">listProjects</a></li>
-    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.3/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/openProjectInEditor.html">openProjectInEditor</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/purge.html">purge</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/reinitializeEnvironment.html">reinitializeEnvironment</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/setGlobalJavaRelease.html">setGlobalJavaRelease</a></li>
-    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/toString.html">toString</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.3/dart-core/Object/toString.html">toString</a></li>
     <li><a href="../../jajvm_core/JajvmApplicationController/useJavaReleaseInFolder.html">useJavaReleaseInFolder</a></li>
 
     <li class="section-title inherited"><a href="../../jajvm_core/JajvmApplicationController-class.html#operators">Operators</a></li>
-    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.3/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
         <li class="section-title"><a href="../../jajvm_core/JajvmApplicationController-class.html#static-properties">Static properties</a></li>
