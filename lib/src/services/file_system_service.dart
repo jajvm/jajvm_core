@@ -356,6 +356,34 @@ echo \$$key
     }
   }
 
+  /// Remove value from the global (system) environment
+  Future<void> removeEnvironmentVariable({
+    required String key,
+    String? value,
+    bool global = false,
+  }) async {
+    try {
+      switch (kCurrentPlatform) {
+        case JajvmSupportedPlatform.windows:
+          final result = await _shell.runExecutableArguments('setx', [
+            if (global) ...['/M'],
+            key,
+            if (value != null) value,
+            '/D',
+          ]);
+          break;
+        default:
+          break;
+      }
+    } on ShellException catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not remove environment variable "$key": ${e.message}',
+        code: JajvmExceptionCode.updateEnvironmentFailed,
+      );
+    }
+  }
+
   /// Parsers the java release file
   ///
   /// Returns null if the file does not exist
