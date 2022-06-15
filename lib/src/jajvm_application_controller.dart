@@ -187,7 +187,9 @@ class JajvmApplicationController {
     );
   }
 
-  /// Search file system for valid java releases
+  /// TODO: Search file system for valid java releases
+  ///
+  ///
   Future<List<JavaRelease>> findJavaReleases(String root) async {
     // Search for java releases on the system recursively starting from [root]
     // - If found, create JavaRelease object and add to list
@@ -196,10 +198,10 @@ class JajvmApplicationController {
     return [];
   }
 
-  /// Change terminal session's java release
+  /// TODO: Change terminal session's java release
   Future<void> changeTerminalSessionJavaRelease(JavaRelease release) async {}
 
-  /// Use java version in folder and its children
+  /// TODO: Use java version in folder and its children
   Future<void> useJavaReleaseInFolder({
     required String path,
     required JavaRelease release,
@@ -265,19 +267,19 @@ class JajvmApplicationController {
         .deleteDirectory(await fileSystemService.envJajvmHomePath);
   }
 
-  /// List Java projects in `jajvm` versions directory
+  /// TODO: List Java projects in `jajvm` versions directory
   Future<List<JavaProject>> listProjects() async {
     return [];
   }
 
-  /// Add java project to database
+  /// TODO: Add java project to database
   Future<void> addProject(String path) async {
     // Verify path is a valid java project
 
     // Add project to database
   }
 
-  /// Find all java projects on system
+  /// TODO: Find all java projects on system
   Future<List<JavaProject>> findProjects() async {
     // Find all java projects on system recursively
     // - If found, create JavaProject object and add to list
@@ -286,7 +288,7 @@ class JajvmApplicationController {
     return [];
   }
 
-  /// Open project in editor of choice
+  /// TODO: Open project in editor of choice
   Future<void> openProjectInEditor(JavaProject project, String editor) async {
     // Open project in editor of choice
   }
