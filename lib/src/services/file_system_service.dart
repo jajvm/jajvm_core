@@ -66,15 +66,15 @@ class FileSystemService {
       final type = await FileSystemEntity.type(path);
       switch (type) {
         case FileSystemEntityType.directory:
-          await Directory(path).delete(recursive: true);
-          return createSymLink(path, target);
         case FileSystemEntityType.file:
-          await File(path).delete();
           return createSymLink(path, target);
         case FileSystemEntityType.link:
-          final link = Link(path);
-          return link.update(target);
+          return Link(path).update(target);
         case FileSystemEntityType.notFound:
+          return createSymLink(path, target);
+        case FileSystemEntityType.pipe:
+        case FileSystemEntityType.unixDomainSock:
+          // TODO(@getBoolean): Unknown if this will fail
           return createSymLink(path, target);
       }
 
@@ -121,6 +121,10 @@ class FileSystemService {
           break;
         case FileSystemEntityType.notFound:
           break;
+        case FileSystemEntityType.pipe:
+        case FileSystemEntityType.unixDomainSock:
+          // TODO(@getBoolean): Can this be deleted?
+          break;
       }
 
       return link.create(target, recursive: true);
@@ -128,6 +132,12 @@ class FileSystemService {
       throw JajvmException(
         message:
             'Exception: Could not create link from "$path" to "$target": ${e.message}',
+        code: JajvmExceptionCode.createLinkFailed,
+      );
+    } on Exception catch (e) {
+      throw JajvmException(
+        message:
+            'Exception: Could not create link from "$path" to "$target": ${e.toString()}',
         code: JajvmExceptionCode.createLinkFailed,
       );
     }
